@@ -12,4 +12,4 @@ Run follow command via SSH while you're in Flarum root folder:
 composer require sijad/flarum-ext-recaptcha
 ```
 
-[image]: https://cloud.githubusercontent.com/assets/7693001/18270859/5890d7da-7444-11e6-9c43-636e68547bfd.png
+[image]: https://cloud.githubusercontent.com/assets/7693001/18271535/dab94c62-7447-11e6-830f-786b37f4f967.png
