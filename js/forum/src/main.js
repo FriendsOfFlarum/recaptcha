@@ -7,11 +7,12 @@ import SignUpModal from 'flarum/components/SignUpModal';
 // import LogInModal from 'flarum/components/LogInModal';
 
 app.initializers.add('sijad-recaptcha', () => {
-  const key = () => app.forum.attribute('recaptchaPublic');
   const isAvail = () => typeof grecaptcha !== 'undefined';
 
   function load() {
-    if (!key()) return;
+    const key = app.forum.attribute('recaptchaPublic');
+
+    if (!key) return;
 
     const render = () => {
       if (this.$('.g-recaptcha').length) return;
@@ -21,7 +22,7 @@ app.initializers.add('sijad-recaptcha', () => {
 
       if (el && !$(el).data('g-rendred')) {
         this.recaptchaID = grecaptcha.render(el, {
-          sitekey: key(),
+          sitekey: key,
           theme: app.forum.attribute('darkMode') ? 'dark' : 'light',
           callback: val => {
             this.recaptchaValue = val;

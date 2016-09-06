@@ -14,9 +14,6 @@ System.register('sijad/recaptcha/main', ['flarum/app', 'flarum/extend', 'flarum/
       // import LogInModal from 'flarum/components/LogInModal';
 
       app.initializers.add('sijad-recaptcha', function () {
-        var key = function key() {
-          return app.forum.attribute('recaptchaPublic');
-        };
         var isAvail = function isAvail() {
           return typeof grecaptcha !== 'undefined';
         };
@@ -24,7 +21,9 @@ System.register('sijad/recaptcha/main', ['flarum/app', 'flarum/extend', 'flarum/
         function load() {
           var _this = this;
 
-          if (!key()) return;
+          var key = app.forum.attribute('recaptchaPublic');
+
+          if (!key) return;
 
           var render = function render() {
             if (_this.$('.g-recaptcha').length) return;
@@ -33,7 +32,7 @@ System.register('sijad/recaptcha/main', ['flarum/app', 'flarum/extend', 'flarum/
 
             if (el && !$(el).data('g-rendred')) {
               _this.recaptchaID = grecaptcha.render(el, {
-                sitekey: key(),
+                sitekey: key,
                 theme: app.forum.attribute('darkMode') ? 'dark' : 'light',
                 callback: function callback(val) {
                   _this.recaptchaValue = val;
