@@ -7,9 +7,11 @@ reCAPTCHA for Flarum.
 ## Installation
 
 1. Run follow command via SSH while you're in Flarum root folder:
+
     ```bash
     composer require sijad/flarum-ext-recaptcha
     ```
+
 2. Copy your site and secret key from [reCAPTCHA admin panel](https://www.google.com/recaptcha/admin).
 3. Enable extension in flarum admin panel and paste your site and secret in setting panel.
 
