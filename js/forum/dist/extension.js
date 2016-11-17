@@ -1,6 +1,8 @@
 'use strict';
 
 System.register('sijad/recaptcha/main', ['flarum/app', 'flarum/extend', 'flarum/components/SignUpModal'], function (_export, _context) {
+  "use strict";
+
   var app, extend, SignUpModal;
   return {
     setters: [function (_flarumApp) {
@@ -17,6 +19,8 @@ System.register('sijad/recaptcha/main', ['flarum/app', 'flarum/extend', 'flarum/
         var isAvail = function isAvail() {
           return typeof grecaptcha !== 'undefined';
         };
+        var recaptchaValue = m.prop();
+        var recaptchaID = m.prop();
 
         function load() {
           var _this = this;
@@ -31,13 +35,13 @@ System.register('sijad/recaptcha/main', ['flarum/app', 'flarum/extend', 'flarum/
             var el = $('<div class="Form-group g-recaptcha">').insertBefore(_this.$('[type="submit"]').parent())[0];
 
             if (el && !$(el).data('g-rendred')) {
-              _this.recaptchaID = grecaptcha.render(el, {
+              recaptchaID(grecaptcha.render(el, {
                 sitekey: key,
                 theme: app.forum.attribute('darkMode') ? 'dark' : 'light',
                 callback: function callback(val) {
-                  _this.recaptchaValue = val;
+                  recaptchaValue(val);
                 }
-              });
+              }));
               $(el).data('g-rendred', true);
               m.redraw();
             }
@@ -72,13 +76,13 @@ System.register('sijad/recaptcha/main', ['flarum/app', 'flarum/extend', 'flarum/
 
         extend(SignUpModal.prototype, 'submitData', function (data) {
           var newData = data;
-          newData['g-recaptcha-response'] = this.recaptchaValue;
+          newData['g-recaptcha-response'] = recaptchaValue();
           return newData;
         });
 
         extend(SignUpModal.prototype, 'onerror', function () {
           if (isAvail()) {
-            grecaptcha.reset(this.recaptchaID);
+            grecaptcha.reset(recaptchaID());
           }
         });
       }); /* global $ */

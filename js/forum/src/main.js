@@ -8,6 +8,8 @@ import SignUpModal from 'flarum/components/SignUpModal';
 
 app.initializers.add('sijad-recaptcha', () => {
   const isAvail = () => typeof grecaptcha !== 'undefined';
+  const recaptchaValue = m.prop();
+  const recaptchaID = m.prop();
 
   function load() {
     const key = app.forum.attribute('recaptchaPublic');
@@ -21,13 +23,13 @@ app.initializers.add('sijad-recaptcha', () => {
         .insertBefore(this.$('[type="submit"]').parent())[0];
 
       if (el && !$(el).data('g-rendred')) {
-        this.recaptchaID = grecaptcha.render(el, {
+        recaptchaID(grecaptcha.render(el, {
           sitekey: key,
           theme: app.forum.attribute('darkMode') ? 'dark' : 'light',
           callback: val => {
-            this.recaptchaValue = val;
+            recaptchaValue(val);
           },
-        });
+        }));
         $(el).data('g-rendred', true);
         m.redraw();
       }
@@ -65,13 +67,13 @@ app.initializers.add('sijad-recaptcha', () => {
 
   extend(SignUpModal.prototype, 'submitData', function (data) {
     const newData = data;
-    newData['g-recaptcha-response'] = this.recaptchaValue;
+    newData['g-recaptcha-response'] = recaptchaValue();
     return newData;
   });
 
   extend(SignUpModal.prototype, 'onerror', function () {
     if (isAvail()) {
-      grecaptcha.reset(this.recaptchaID);
+      grecaptcha.reset(recaptchaID());
     }
   });
 });
