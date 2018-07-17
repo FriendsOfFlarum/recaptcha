@@ -17,7 +17,7 @@ System.register('sijad/recaptcha/main', ['flarum/app', 'flarum/extend', 'flarum/
 
       app.initializers.add('sijad-recaptcha', function () {
         var isAvail = function isAvail() {
-          return typeof grecaptcha !== 'undefined';
+          return typeof grecaptcha !== 'undefined' && typeof grecaptcha.render === 'function';
         };
         var recaptchaValue = m.prop();
         var recaptchaID = m.prop();
