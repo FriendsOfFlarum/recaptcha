@@ -1,18 +1,28 @@
-# Flarum reCAPTCHA Extension
+# ReCAPTCHA by FriendsofFlarum
 
-reCAPTCHA for Flarum.
+![License](https://img.shields.io/badge/license-MIT-blue.svg) [![Latest Stable Version](https://img.shields.io/packagist/v/fof/recaptcha.svg)](https://packagist.org/packages/fof/recaptcha)
 
-![image]
+A [Flarum](http://flarum.org) extension. Increase your forum's security with Google reCAPTCHA.
 
-## Installation
+![screenshot](https://cloud.githubusercontent.com/assets/7693001/18271535/dab94c62-7447-11e6-830f-786b37f4f967.png)
 
-1. Run follow command via SSH while you're in Flarum root folder:
+### Installation
 
-    ```bash
-    composer require sijad/flarum-ext-recaptcha
-    ```
+Use [Bazaar](https://discuss.flarum.org/d/5151-flagrow-bazaar-the-extension-marketplace) or install manually with composer:
 
-2. Copy your site and secret key from [reCAPTCHA admin panel](https://www.google.com/recaptcha/admin).
-3. Enable extension in flarum admin panel and paste your site and secret in setting panel.
+```sh
+composer require fof/recaptcha
+```
 
-[image]: https://cloud.githubusercontent.com/assets/7693001/18271535/dab94c62-7447-11e6-830f-786b37f4f967.png
+### Updating
+
+```sh
+composer update fof/recaptcha
+```
+
+### Links   
+
+- [Packagist](https://packagist.org/packages/fof/recaptcha)
+- [GitHub](https://github.com/FriendsOfFlarum/formatting)
+
+An extension by [FriendsOfFlarum](https://github.com/FriendsOfFlarum).

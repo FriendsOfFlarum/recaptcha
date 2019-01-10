@@ -1,38 +1,42 @@
 {
-    "name": "sijad/flarum-ext-recaptcha",
-    "description": "Google reCAPTCHA for flarum",
-    "type": "flarum-extension",
-    "keywords": ["captcha", "validate", "verify"],
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Sajjad Hashemian",
-            "email": "wolaws@gmail.com"
-        }
-    ],
-    "support": {
-        "issues": "https://github.com/sijad/flarum-ext-recaptcha/issues",
-        "source": "https://github.com/sijad/flarum-ext-recaptcha"
+  "name": "fof/recaptcha",
+  "description": "Increase your forum's security with Google reCAPTCHA",
+  "keywords": [
+    "flarum"
+  ],
+  "type": "flarum-extension",
+  "license": "MIT",
+  "require": {
+    "flarum/core": "^0.1.0-beta.8",
+    "google/recaptcha": "^1.2"
+  },
+  "authors": [
+    {
+      "name": "Sajjad Hashemian",
+      "email": "wolaws@gmail.com"
     },
-    "require": {
-        "flarum/core": "^0.1.0-beta.5",
-        "google/recaptcha": "~1.1"
-    },
-    "autoload": {
-        "psr-4": {
-            "Sijad\\ReCaptcha\\": "src/"
-        }
-    },
-    "extra": {
-        "flarum-extension": {
-            "title": "Google reCAPTCHA",
-            "icon": {
-                "image": "icon.svg",
-                "backgroundColor": "#fff",
-                "backgroundSize": "contain",
-                "backgroundPosition": "center",
-                "backgroundRepeat": "no-repeat"
-            }
-        }
+    {
+      "name": "David Sevilla Martín",
+      "email": "david.s@redevs.org",
+      "role": "Developer"
     }
+  ],
+  "autoload": {
+    "psr-4": {
+      "FoF\\ReCaptcha\\": "src/"
+    }
+  },
+  "extra": {
+    "flarum-extension": {
+      "title": "FoF reCAPTCHA",
+      "icon": {
+        "name": "fas fa-robot",
+        "backgroundColor": "#e74c3c",
+        "color": "#fff"
+      }
+    },
+    "flagrow": {
+      "discuss": ""
+    }
+  }
 }
