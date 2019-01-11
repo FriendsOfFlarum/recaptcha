@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of fof/recaptcha.
+ *
+ * Copyright (c) 2019 FriendsOfFlarum.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace FoF\ReCaptcha\Listeners;
 
 use Flarum\Foundation\Event\Validating;
@@ -30,7 +39,7 @@ class AddValidatorRule
             if ($event->type instanceof RecaptchaValidator) {
                 $event->validator->addExtension(
                     'recaptcha',
-                    function($attribute, $value, $parameters) use ($secret) {
+                    function ($attribute, $value, $parameters) use ($secret) {
                         return !empty($value) && (new ReCaptcha($secret))->verify($value)->isSuccess();
                     }
                 );
