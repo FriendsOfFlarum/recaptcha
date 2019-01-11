@@ -21,6 +21,9 @@
       "role": "Developer"
     }
   ],
+  "replace": {
+    "sijad/flarum-ext-recaptcha": "*"
+  },
   "autoload": {
     "psr-4": {
       "FoF\\ReCaptcha\\": "src/"
