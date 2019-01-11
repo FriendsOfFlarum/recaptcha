@@ -12,13 +12,7 @@ export default class Recaptcha extends Component {
     view() {
         return (
             <div className="Form-group">
-                <div
-                    className="g-recaptcha"
-                    config={this.configRecaptcha.bind(this)}
-                    data-sitekey={this.data.sitekey}
-                    data-type={this.data.type}
-                    data-theme={this.data.theme}
-                />
+                <div className="g-recaptcha" config={this.configRecaptcha.bind(this)} />
             </div>
         );
     }
@@ -30,17 +24,18 @@ export default class Recaptcha extends Component {
             sitekey: this.data.sitekey,
             theme: this.data.theme,
             type: this.data.type,
-            callback: this.props.verifyCallback,
+            callback: this.props.callback,
             size: this.props.size,
-            tabindex: this.props.tabindex,
-            hl: this.props.hl,
-            badge: this.props.badge,
             'expired-callback': this.props.expiredCallback,
         });
     }
 
     getResponse() {
         return grecaptcha.getResponse(this.widgetId);
+    }
+
+    execute() {
+        return grecaptcha.execute(this.widgetId);
     }
 
     reset() {

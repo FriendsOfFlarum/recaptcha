@@ -159,10 +159,7 @@ function (_Component) {
       className: "Form-group"
     }, m("div", {
       className: "g-recaptcha",
-      config: this.configRecaptcha.bind(this),
-      "data-sitekey": this.data.sitekey,
-      "data-type": this.data.type,
-      "data-theme": this.data.theme
+      config: this.configRecaptcha.bind(this)
     }));
   };
 
@@ -172,17 +169,18 @@ function (_Component) {
       sitekey: this.data.sitekey,
       theme: this.data.theme,
       type: this.data.type,
-      callback: this.props.verifyCallback,
+      callback: this.props.callback,
       size: this.props.size,
-      tabindex: this.props.tabindex,
-      hl: this.props.hl,
-      badge: this.props.badge,
       'expired-callback': this.props.expiredCallback
     });
   };
 
   _proto.getResponse = function getResponse() {
     return grecaptcha.getResponse(this.widgetId);
+  };
+
+  _proto.execute = function execute() {
+    return grecaptcha.execute(this.widgetId);
   };
 
   _proto.reset = function reset() {
@@ -214,15 +212,36 @@ __webpack_require__.r(__webpack_exports__);
 
 
 app.initializers.add('fof/recaptcha', function () {
+  var type = app.data['fof-recaptcha.type'];
+  var submitCallback;
   Object(flarum_extend__WEBPACK_IMPORTED_MODULE_0__["extend"])(flarum_components_SignUpModal__WEBPACK_IMPORTED_MODULE_1___default.a.prototype, 'submitData', function (data) {
-    data['g-recaptcha-response'] = this.recaptcha.getResponse();
+    data['g-recaptcha-response'] = this.recaptcha && this.recaptcha.getResponse();
   });
   Object(flarum_extend__WEBPACK_IMPORTED_MODULE_0__["extend"])(flarum_components_SignUpModal__WEBPACK_IMPORTED_MODULE_1___default.a.prototype, 'fields', function (fields) {
-    fields.add('recaptcha', this.recaptcha = new _components_Recaptcha__WEBPACK_IMPORTED_MODULE_2__["default"](), -5);
+    var opts = type === 'invisible' ? {
+      type: type,
+      size: 'invisible',
+      callback: function callback() {
+        return submitCallback();
+      }
+    } : {};
+    fields.add('recaptcha', this.recaptcha = new _components_Recaptcha__WEBPACK_IMPORTED_MODULE_2__["default"](opts), -5);
   });
   Object(flarum_extend__WEBPACK_IMPORTED_MODULE_0__["extend"])(flarum_components_SignUpModal__WEBPACK_IMPORTED_MODULE_1___default.a.prototype, 'onerror', function () {
-    this.recaptcha.reset();
+    this.recaptcha && this.recaptcha.reset();
   });
+
+  if (type === 'invisible') {
+    Object(flarum_extend__WEBPACK_IMPORTED_MODULE_0__["override"])(flarum_components_SignUpModal__WEBPACK_IMPORTED_MODULE_1___default.a.prototype, 'onsubmit', function (original, e) {
+      e.preventDefault();
+
+      submitCallback = function submitCallback() {
+        return original(e);
+      };
+
+      this.recaptcha && this.recaptcha.execute();
+    });
+  }
 });
 
 /***/ }),
