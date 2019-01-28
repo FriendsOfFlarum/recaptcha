@@ -1,0 +1,12 @@
+fof-recaptcha:
+  admin:
+    settings:
+      help_text: Récupérez vos identifiants Google reCAPTCHA <a>ici</a>.
+
+      type_label: Type de reCAPTCHA
+
+      site_key_label: Clé du site
+      secret_key_label: Clé secrète
+
+validation:
+  recaptcha: La validation a échouée.
