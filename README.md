@@ -23,7 +23,7 @@ composer update fof/recaptcha
 ### Links   
 
 - [Packagist](https://packagist.org/packages/fof/recaptcha)
-- [GitHub](https://github.com/FriendsOfFlarum/formatting)
+- [GitHub](https://github.com/FriendsOfFlarum/recaptcha)
 - [Sijad's reCAPTCHA](https://github.com/sijad/flarum-ext-recaptcha)
 
 An extension by [FriendsOfFlarum](https://github.com/FriendsOfFlarum).
