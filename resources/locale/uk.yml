@@ -1,0 +1,12 @@
+fof-recaptcha:
+  admin:
+    settings:
+      help_text: Отримати облікові дані Google reCAPTCHA <a> тут </a>.
+
+      type_label: Тип reCAPTCHA
+
+      site_key_label: Site Key
+      secret_key_label: Secret Key
+
+validation:
+  recaptcha: Помилка перевірки reCAPTCHA.
