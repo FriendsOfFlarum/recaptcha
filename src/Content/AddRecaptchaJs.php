@@ -19,6 +19,6 @@ class AddRecaptchaJs
     {
         $locale = app('translator')->getLocale();
 
-        $document->head[] = "<script src=\"https://www.google.com/recaptcha/api.js?hl=$locale&render=explicit\" async defer></script>";
+        $document->head[] = "<script src=\"https://www.recaptcha.net/recaptcha/api.js?hl=$locale&render=explicit\" async defer></script>";
     }
 }
