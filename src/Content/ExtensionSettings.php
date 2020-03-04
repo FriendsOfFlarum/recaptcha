@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace FoF\Recaptcha\Content;
+namespace FoF\ReCaptcha\Content;
 
 use Flarum\Frontend\Document;
 use Flarum\Settings\SettingsRepositoryInterface;
