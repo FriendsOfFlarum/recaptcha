@@ -1,7 +1,8 @@
 import Component from 'flarum/Component';
 
 export default class Recaptcha extends Component {
-    init() {
+    oninit(vnode) {
+        super.oninit(vnode);
         this.data = {
             sitekey: app.data['fof-recaptcha.credentials.site'],
             type: app.data['fof-recaptcha.type'],
@@ -12,21 +13,19 @@ export default class Recaptcha extends Component {
     view() {
         return (
             <div className="Form-group">
-                <div className="g-recaptcha" config={this.configRecaptcha.bind(this)} />
+                <div className="g-recaptcha" oncreate={this.configRecaptcha.bind(this)}/>
             </div>
         );
     }
 
-    configRecaptcha($el, isInitialized) {
-        if (isInitialized) return;
-
-        this.widgetId = grecaptcha.render($el, {
+    configRecaptcha(vnode) {
+        this.widgetId = grecaptcha.render(vnode.dom, {
             sitekey: this.data.sitekey,
             theme: this.data.theme,
             type: this.data.type,
-            callback: this.props.callback,
-            size: this.props.size,
-            'expired-callback': this.props.expiredCallback,
+            callback: this.attrs.callback,
+            size: this.attrs.size,
+            'expired-callback': this.attrs.expiredCallback,
         });
     }
 

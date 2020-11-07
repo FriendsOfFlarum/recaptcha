@@ -13,6 +13,7 @@ namespace FoF\ReCaptcha\Listeners;
 
 use Flarum\User\Event\Saving;
 use FoF\ReCaptcha\Validators\RecaptchaValidator;
+use Illuminate\Support\Arr;
 
 class RegisterValidate
 {
@@ -33,7 +34,7 @@ class RegisterValidate
     {
         if (!$event->user->exists) {
             $this->validator->assertValid([
-                'recaptcha' => array_get($event->data, 'attributes.g-recaptcha-response'),
+                'recaptcha' => Arr::get($event->data, 'attributes.g-recaptcha-response'),
             ]);
         }
     }

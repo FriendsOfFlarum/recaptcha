@@ -21,7 +21,7 @@ app.initializers.add('fof/recaptcha', () => {
                   }
                 : {};
 
-        fields.add('recaptcha', (this.recaptcha = new Recaptcha(opts)), -5);
+        fields.add('recaptcha', (this.recaptcha = Recaptcha.component(opts)), -5);
     });
 
     extend(SignUpModal.prototype, 'onerror', function() {

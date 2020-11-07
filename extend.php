@@ -15,9 +15,11 @@ use Flarum\Api\Event\Serializing;
 use Flarum\Extend;
 use Flarum\Foundation\Event\Validating;
 use Flarum\User\Event\Saving;
+use FoF\Components\Extend\AddFofComponents;
 use Illuminate\Events\Dispatcher;
 
 return [
+    new AddFofComponents(),
     (new Extend\Frontend('forum'))
         ->js(__DIR__.'/js/dist/forum.js')
         ->css(__DIR__.'/resources/less/forum.less')
