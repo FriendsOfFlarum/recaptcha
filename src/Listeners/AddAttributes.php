@@ -14,7 +14,6 @@ namespace FoF\ReCaptcha\Listeners;
 use Flarum\Api\Event\Serializing;
 use Flarum\Api\Serializer\ForumSerializer;
 use Flarum\Settings\SettingsRepositoryInterface;
-use Illuminate\Contracts\Events\Dispatcher;
 
 class AddAttributes
 {
