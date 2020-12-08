@@ -8,7 +8,7 @@ app.initializers.add('fof/recaptcha', () => {
     let submitCallback;
 
     extend(SignUpModal.prototype, 'submitData', function (data) {
-        data['g-recaptcha-response'] = this.recaptcha && this.recaptcha.getResponse();
+        data['g-recaptcha-response'] = this.recaptcha && this.recaptcha.state.getResponse();
     });
 
     extend(SignUpModal.prototype, 'fields', function (fields) {
@@ -25,7 +25,7 @@ app.initializers.add('fof/recaptcha', () => {
     });
 
     extend(SignUpModal.prototype, 'onerror', function () {
-        this.recaptcha && this.recaptcha.reset();
+        this.recaptcha && this.recaptcha.state.reset();
     });
 
     if (type === 'invisible') {
@@ -34,7 +34,7 @@ app.initializers.add('fof/recaptcha', () => {
 
             submitCallback = () => original(e);
 
-            this.recaptcha && this.recaptcha.execute();
+            this.recaptcha && this.recaptcha.state.execute();
         });
     }
 });
