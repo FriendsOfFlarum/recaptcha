@@ -28,14 +28,6 @@ class AddAttributes
         $this->settings = $settings;
     }
 
-    /**
-     * @param Dispatcher $events
-     */
-    public function subscribe(Dispatcher $events)
-    {
-        $events->listen(Serializing::class, [$this, 'serializing']);
-    }
-
     public function handle(Serializing $event)
     {
         if ($event->isSerializer(ForumSerializer::class)) {

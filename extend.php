@@ -16,22 +16,24 @@ use Flarum\Extend;
 use Flarum\Foundation\Event\Validating;
 use Flarum\User\Event\Saving;
 use FoF\Components\Extend\AddFofComponents;
-use Illuminate\Events\Dispatcher;
 
 return [
     new AddFofComponents(),
+
     (new Extend\Frontend('forum'))
         ->js(__DIR__.'/js/dist/forum.js')
         ->css(__DIR__.'/resources/less/forum.less')
         ->content(Content\AddRecaptchaJs::class)
         ->content(Content\ExtensionSettings::class),
+
     (new Extend\Frontend('admin'))
         ->js(__DIR__.'/js/dist/admin.js')
         ->css(__DIR__.'/resources/less/admin.less'),
+
     new Extend\Locales(__DIR__.'/resources/locale'),
-    function (Dispatcher $events) {
-        $events->listen(Validating::class, Listeners\AddValidatorRule::class);
-        $events->listen(Serializing::class, Listeners\AddAttributes::class);
-        $events->listen(Saving::class, Listeners\RegisterValidate::class);
-    },
+
+    (new Extend\Event())
+        ->listen(Validating::class, Listeners\AddValidatorRule::class)
+        ->listen(Serializing::class, Listeners\AddAttributes::class)
+        ->listen(Saving::class, Listeners\RegisterValidate::class),
 ];

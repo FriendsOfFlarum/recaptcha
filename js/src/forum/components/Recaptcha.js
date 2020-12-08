@@ -13,12 +13,13 @@ export default class Recaptcha extends Component {
     view() {
         return (
             <div className="Form-group">
-                <div className="g-recaptcha" oncreate={this.configRecaptcha.bind(this)}/>
+                <div className="g-recaptcha" oncreate={this.createRecaptcha.bind(this)} />
             </div>
         );
     }
 
-    configRecaptcha(vnode) {
+    createRecaptcha(vnode) {
+        super.oncreate(vnode);
         this.widgetId = grecaptcha.render(vnode.dom, {
             sitekey: this.data.sitekey,
             theme: this.data.theme,

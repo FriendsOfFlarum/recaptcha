@@ -1,2 +1,286 @@
-module.exports=function(t){var e={};function r(n){if(e[n])return e[n].exports;var a=e[n]={i:n,l:!1,exports:{}};return t[n].call(a.exports,a,a.exports,r),a.l=!0,a.exports}return r.m=t,r.c=e,r.d=function(t,e,n){r.o(t,e)||Object.defineProperty(t,e,{enumerable:!0,get:n})},r.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},r.t=function(t,e){if(1&e&&(t=r(t)),8&e)return t;if(4&e&&"object"==typeof t&&t&&t.__esModule)return t;var n=Object.create(null);if(r.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:t}),2&e&&"string"!=typeof t)for(var a in t)r.d(n,a,function(e){return t[e]}.bind(null,a));return n},r.n=function(t){var e=t&&t.__esModule?function(){return t.default}:function(){return t};return r.d(e,"a",e),e},r.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},r.p="",r(r.s=4)}([function(t,e){t.exports=flarum.core.compat.extend},function(t,e){t.exports=flarum.core.compat["components/SignUpModal"]},,function(t,e){t.exports=flarum.core.compat.Component},function(t,e,r){"use strict";r.r(e);var n=r(0),a=r(1),o=r.n(a);var c=r(3),i=function(t){var e,r;function n(){return t.apply(this,arguments)||this}r=t,(e=n).prototype=Object.create(r.prototype),e.prototype.constructor=e,e.__proto__=r;var a=n.prototype;return a.oninit=function(e){t.prototype.oninit.call(this,e),this.data={sitekey:app.data["fof-recaptcha.credentials.site"],type:app.data["fof-recaptcha.type"],theme:app.forum.attribute("darkMode")?"dark":"light"}},a.view=function(){return m("div",{className:"Form-group"},m("div",{className:"g-recaptcha",oncreate:this.configRecaptcha.bind(this)}))},a.configRecaptcha=function(t){this.widgetId=grecaptcha.render(t.dom,{sitekey:this.data.sitekey,theme:this.data.theme,type:this.data.type,callback:this.attrs.callback,size:this.attrs.size,"expired-callback":this.attrs.expiredCallback})},a.getResponse=function(){return grecaptcha.getResponse(this.widgetId)},a.execute=function(){return grecaptcha.execute(this.widgetId)},a.reset=function(){return grecaptcha.reset(this.widgetId)},n}(r.n(c).a);app.initializers.add("fof/recaptcha",(function(){var t,e=app.data["fof-recaptcha.type"];Object(n.extend)(o.a.prototype,"submitData",(function(t){t["g-recaptcha-response"]=this.recaptcha&&this.recaptcha.getResponse()})),Object(n.extend)(o.a.prototype,"fields",(function(r){var n="invisible"===e?{type:e,size:"invisible",callback:function(){return t()}}:{};r.add("recaptcha",this.recaptcha=i.component(n),-5)})),Object(n.extend)(o.a.prototype,"onerror",(function(){this.recaptcha&&this.recaptcha.reset()})),"invisible"===e&&Object(n.override)(o.a.prototype,"onsubmit",(function(e,r){r.preventDefault(),t=function(){return e(r)},this.recaptcha&&this.recaptcha.execute()}))}))}]);
+module.exports =
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./forum.js");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./forum.js":
+/*!******************!*\
+  !*** ./forum.js ***!
+  \******************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _src_forum__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./src/forum */ "./src/forum/index.js");
+/* empty/unused harmony star reexport */
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/inheritsLoose.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/inheritsLoose.js ***!
+  \******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _inheritsLoose; });
+function _inheritsLoose(subClass, superClass) {
+  subClass.prototype = Object.create(superClass.prototype);
+  subClass.prototype.constructor = subClass;
+  subClass.__proto__ = superClass;
+}
+
+/***/ }),
+
+/***/ "./src/forum/components/Recaptcha.js":
+/*!*******************************************!*\
+  !*** ./src/forum/components/Recaptcha.js ***!
+  \*******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Recaptcha; });
+/* harmony import */ var _babel_runtime_helpers_esm_inheritsLoose__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/inheritsLoose */ "./node_modules/@babel/runtime/helpers/esm/inheritsLoose.js");
+/* harmony import */ var flarum_Component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! flarum/Component */ "flarum/Component");
+/* harmony import */ var flarum_Component__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(flarum_Component__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
+var Recaptcha =
+/*#__PURE__*/
+function (_Component) {
+  Object(_babel_runtime_helpers_esm_inheritsLoose__WEBPACK_IMPORTED_MODULE_0__["default"])(Recaptcha, _Component);
+
+  function Recaptcha() {
+    return _Component.apply(this, arguments) || this;
+  }
+
+  var _proto = Recaptcha.prototype;
+
+  _proto.oninit = function oninit(vnode) {
+    _Component.prototype.oninit.call(this, vnode);
+
+    this.data = {
+      sitekey: app.data['fof-recaptcha.credentials.site'],
+      type: app.data['fof-recaptcha.type'],
+      theme: app.forum.attribute('darkMode') ? 'dark' : 'light'
+    };
+  };
+
+  _proto.view = function view() {
+    return m("div", {
+      className: "Form-group"
+    }, m("div", {
+      className: "g-recaptcha",
+      oncreate: this.createRecaptcha.bind(this)
+    }));
+  };
+
+  _proto.createRecaptcha = function createRecaptcha(vnode) {
+    _Component.prototype.oncreate.call(this, vnode);
+
+    this.widgetId = grecaptcha.render(vnode.dom, {
+      sitekey: this.data.sitekey,
+      theme: this.data.theme,
+      type: this.data.type,
+      callback: this.attrs.callback,
+      size: this.attrs.size,
+      'expired-callback': this.attrs.expiredCallback
+    });
+  };
+
+  _proto.getResponse = function getResponse() {
+    return grecaptcha.getResponse(this.widgetId);
+  };
+
+  _proto.execute = function execute() {
+    return grecaptcha.execute(this.widgetId);
+  };
+
+  _proto.reset = function reset() {
+    return grecaptcha.reset(this.widgetId);
+  };
+
+  return Recaptcha;
+}(flarum_Component__WEBPACK_IMPORTED_MODULE_1___default.a);
+
+
+
+/***/ }),
+
+/***/ "./src/forum/index.js":
+/*!****************************!*\
+  !*** ./src/forum/index.js ***!
+  \****************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var flarum_extend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! flarum/extend */ "flarum/extend");
+/* harmony import */ var flarum_extend__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(flarum_extend__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var flarum_components_SignUpModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! flarum/components/SignUpModal */ "flarum/components/SignUpModal");
+/* harmony import */ var flarum_components_SignUpModal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(flarum_components_SignUpModal__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _components_Recaptcha__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/Recaptcha */ "./src/forum/components/Recaptcha.js");
+
+
+
+app.initializers.add('fof/recaptcha', function () {
+  var type = app.data['fof-recaptcha.type'];
+  var submitCallback;
+  Object(flarum_extend__WEBPACK_IMPORTED_MODULE_0__["extend"])(flarum_components_SignUpModal__WEBPACK_IMPORTED_MODULE_1___default.a.prototype, 'submitData', function (data) {
+    data['g-recaptcha-response'] = this.recaptcha && this.recaptcha.getResponse();
+  });
+  Object(flarum_extend__WEBPACK_IMPORTED_MODULE_0__["extend"])(flarum_components_SignUpModal__WEBPACK_IMPORTED_MODULE_1___default.a.prototype, 'fields', function (fields) {
+    var opts = type === 'invisible' ? {
+      type: type,
+      size: 'invisible',
+      callback: function callback() {
+        return submitCallback();
+      }
+    } : {};
+    fields.add('recaptcha', this.recaptcha = _components_Recaptcha__WEBPACK_IMPORTED_MODULE_2__["default"].component(opts), -5);
+  });
+  Object(flarum_extend__WEBPACK_IMPORTED_MODULE_0__["extend"])(flarum_components_SignUpModal__WEBPACK_IMPORTED_MODULE_1___default.a.prototype, 'onerror', function () {
+    this.recaptcha && this.recaptcha.reset();
+  });
+
+  if (type === 'invisible') {
+    Object(flarum_extend__WEBPACK_IMPORTED_MODULE_0__["override"])(flarum_components_SignUpModal__WEBPACK_IMPORTED_MODULE_1___default.a.prototype, 'onsubmit', function (original, e) {
+      e.preventDefault();
+
+      submitCallback = function submitCallback() {
+        return original(e);
+      };
+
+      this.recaptcha && this.recaptcha.execute();
+    });
+  }
+});
+
+/***/ }),
+
+/***/ "flarum/Component":
+/*!**************************************************!*\
+  !*** external "flarum.core.compat['Component']" ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = flarum.core.compat['Component'];
+
+/***/ }),
+
+/***/ "flarum/components/SignUpModal":
+/*!***************************************************************!*\
+  !*** external "flarum.core.compat['components/SignUpModal']" ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = flarum.core.compat['components/SignUpModal'];
+
+/***/ }),
+
+/***/ "flarum/extend":
+/*!***********************************************!*\
+  !*** external "flarum.core.compat['extend']" ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = flarum.core.compat['extend'];
+
+/***/ })
+
+/******/ });
 //# sourceMappingURL=forum.js.map
