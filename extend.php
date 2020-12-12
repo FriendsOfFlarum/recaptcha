@@ -30,7 +30,7 @@ return [
     new Extend\Locales(__DIR__.'/resources/locale'),
 
     (new Extend\Settings())
-        ->serializeToForum('darkMode', 'theme_dark_mode', function ($val){
+        ->serializeToForum('darkMode', 'theme_dark_mode', function ($val) {
             return (bool) $val;
         }),
 

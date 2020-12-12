@@ -34,7 +34,7 @@ class AddValidatorRule
     public function __invoke(AbstractValidator $flarumValidator, Validator $validator)
     {
         $secret = $this->settings->get('fof-recaptcha.credentials.secret');
-        
+
         $validator->addExtension(
             'recaptcha',
             function ($attribute, $value, $parameters) use ($secret) {
