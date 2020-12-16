@@ -11,9 +11,9 @@
 
 namespace FoF\ReCaptcha\Listeners;
 
-use Flarum\Foundation\Event\Validating;
+use Flarum\Foundation\AbstractValidator;
 use Flarum\Settings\SettingsRepositoryInterface;
-use FoF\ReCaptcha\Validators\RecaptchaValidator;
+use Illuminate\Validation\Validator;
 use ReCaptcha\ReCaptcha;
 
 class AddValidatorRule
@@ -31,19 +31,15 @@ class AddValidatorRule
         $this->settings = $settings;
     }
 
-    public function handle(Validating $event)
+    public function __invoke(AbstractValidator $flarumValidator, Validator $validator)
     {
         $secret = $this->settings->get('fof-recaptcha.credentials.secret');
 
-        if (!empty($secret)) {
-            if ($event->type instanceof RecaptchaValidator) {
-                $event->validator->addExtension(
-                    'recaptcha',
-                    function ($attribute, $value, $parameters) use ($secret) {
-                        return !empty($value) && (new ReCaptcha($secret))->verify($value)->isSuccess();
-                    }
-                );
+        $validator->addExtension(
+            'recaptcha',
+            function ($attribute, $value, $parameters) use ($secret) {
+                return !empty($value) && (new ReCaptcha($secret))->verify($value)->isSuccess();
             }
-        }
+        );
     }
 }

@@ -11,15 +11,12 @@
 
 namespace FoF\ReCaptcha;
 
-use Flarum\Api\Event\Serializing;
 use Flarum\Extend;
-use Flarum\Foundation\Event\Validating;
 use Flarum\User\Event\Saving;
-use FoF\Components\Extend\AddFofComponents;
+use FoF\ReCaptcha\Listeners\AddValidatorRule;
+use FoF\ReCaptcha\Validators\RecaptchaValidator;
 
 return [
-    new AddFofComponents(),
-
     (new Extend\Frontend('forum'))
         ->js(__DIR__.'/js/dist/forum.js')
         ->css(__DIR__.'/resources/less/forum.less')
@@ -32,8 +29,14 @@ return [
 
     new Extend\Locales(__DIR__.'/resources/locale'),
 
+    (new Extend\Settings())
+        ->serializeToForum('darkMode', 'theme_dark_mode', function ($val) {
+            return (bool) $val;
+        }),
+
+    (new Extend\Validator(RecaptchaValidator::class))
+        ->configure(AddValidatorRule::class),
+
     (new Extend\Event())
-        ->listen(Validating::class, Listeners\AddValidatorRule::class)
-        ->listen(Serializing::class, Listeners\AddAttributes::class)
         ->listen(Saving::class, Listeners\RegisterValidate::class),
 ];
