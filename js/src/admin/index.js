@@ -36,6 +36,7 @@ app.initializers.add('fof/recaptcha', () => {
             {
                 permission: 'fof-recaptcha.postWithoutCaptcha',
                 label: app.translator.trans('fof-recaptcha.admin.permissions.post_without_captcha'),
+                icon: 'fas fa-robot',
             },
             'reply'
         );
