@@ -39,7 +39,7 @@ return [
 
     (new Extend\ApiSerializer(ForumSerializer::class))
         ->attribute('postWithoutCaptcha', function (ForumSerializer $serializer) {
-            return (bool)$serializer->getActor()->hasPermission('fof-recaptcha.postWithoutCaptcha');
+            return (bool) $serializer->getActor()->hasPermission('fof-recaptcha.postWithoutCaptcha');
         }),
 
     (new Extend\Validator(RecaptchaValidator::class))
