@@ -2,39 +2,58 @@ import { extend, override } from 'flarum/extend';
 import SignUpModal from 'flarum/components/SignUpModal';
 
 import Recaptcha from './components/Recaptcha';
+import RecaptchaState from './states/RecaptchaState';
 
 app.initializers.add('fof/recaptcha', () => {
-    const type = app.data['fof-recaptcha.type'];
-    let submitCallback;
+    const isInvisible = app.data['fof-recaptcha.type'] === 'invisible';
+
+    extend(SignUpModal.prototype, 'oninit', function () {
+        this.recaptcha = new RecaptchaState(
+            () => {
+                if (isInvisible) {
+                    // Create "fake" event so this works when other extensions extend onsubmit as well
+                    const event = new Event('submit');
+                    event.isRecaptchaSecondStep = true;
+                    this.onsubmit(event);
+                }
+            },
+            (alertAttrs) => {
+                // Removes the spinner on the submit button so we can try again
+                this.loaded();
+                this.alertAttrs = alertAttrs;
+            }
+        );
+    });
 
     extend(SignUpModal.prototype, 'submitData', function (data) {
-        data['g-recaptcha-response'] = this.recaptcha && this.recaptcha.state.getResponse();
+        data['g-recaptcha-response'] = this.recaptcha.getResponse();
     });
 
     extend(SignUpModal.prototype, 'fields', function (fields) {
-        const opts =
-            type === 'invisible'
-                ? {
-                      type,
-                      size: 'invisible',
-                      callback: () => submitCallback(),
-                  }
-                : {};
-
-        fields.add('recaptcha', (this.recaptcha = Recaptcha.component(opts)), -5);
+        fields.add(
+            'recaptcha',
+            Recaptcha.component({
+                state: this.recaptcha,
+            }),
+            -5
+        );
     });
 
     extend(SignUpModal.prototype, 'onerror', function () {
-        this.recaptcha && this.recaptcha.state.reset();
+        this.recaptcha.reset();
     });
 
-    if (type === 'invisible') {
-        override(SignUpModal.prototype, 'onsubmit', function (original, e) {
+    override(SignUpModal.prototype, 'onsubmit', function (original, e) {
+        if (isInvisible && !e.isRecaptchaSecondStep) {
+            // When recaptcha is invisible, onsubmit will be called two times
+            // First time with normal event, we will call recaptcha.execute
+            // Second time is called from recaptcha callback with a special isRecaptcha attribute
             e.preventDefault();
+            this.loading = true;
+            this.recaptcha.execute();
+            return;
+        }
 
-            submitCallback = () => original(e);
-
-            this.recaptcha && this.recaptcha.state.execute();
-        });
-    }
+        return original(e);
+    });
 });
