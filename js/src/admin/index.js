@@ -31,5 +31,12 @@ app.initializers.add('fof/recaptcha', () => {
             label: app.translator.trans('fof-recaptcha.admin.settings.secret_key_label'),
             type: 'password',
             required: true,
-        });
+        })
+        .registerPermission(
+            {
+                permission: 'fof-recaptcha.postWithoutCaptcha',
+                label: app.translator.trans('fof-recaptcha.admin.permissions.post_without_captcha'),
+            },
+            'reply'
+        );
 });

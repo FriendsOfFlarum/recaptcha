@@ -12,5 +12,14 @@ export default class Recaptcha extends Component {
     oncreate(vnode) {
         super.oncreate(vnode);
         this.attrs.state.render(vnode.dom.querySelector('.g-recaptcha'));
+
+        // It's possible to TAB into the reCAPTCHA iframe, and it's very confusing when using the invisible mode
+        if (app.data['fof-recaptcha.type'] === 'invisible') {
+            const iframe = vnode.dom.querySelector('iframe');
+
+            if (iframe) {
+                iframe.tabIndex = -1;
+            }
+        }
     }
 }

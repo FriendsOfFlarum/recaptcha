@@ -11,8 +11,11 @@
 
 namespace FoF\ReCaptcha;
 
+use Flarum\Api\Serializer\ForumSerializer;
+use Flarum\Discussion\Event\Saving as DiscussionSaving;
 use Flarum\Extend;
-use Flarum\User\Event\Saving;
+use Flarum\Post\Event\Saving as PostSaving;
+use Flarum\User\Event\Saving as UserSaving;
 use FoF\ReCaptcha\Listeners\AddValidatorRule;
 use FoF\ReCaptcha\Validators\RecaptchaValidator;
 
@@ -34,9 +37,16 @@ return [
             return (bool) $val;
         }),
 
+    (new Extend\ApiSerializer(ForumSerializer::class))
+        ->attribute('postWithoutCaptcha', function (ForumSerializer $serializer) {
+            return (bool)$serializer->getActor()->hasPermission('fof-recaptcha.postWithoutCaptcha');
+        }),
+
     (new Extend\Validator(RecaptchaValidator::class))
         ->configure(AddValidatorRule::class),
 
     (new Extend\Event())
-        ->listen(Saving::class, Listeners\RegisterValidate::class),
+        ->listen(UserSaving::class, Listeners\RegisterValidate::class)
+        ->listen(DiscussionSaving::class, Listeners\StartDiscussionValidate::class)
+        ->listen(PostSaving::class, Listeners\ReplyPostValidate::class),
 ];

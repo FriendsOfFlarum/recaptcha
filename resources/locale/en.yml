@@ -6,6 +6,8 @@ fof-recaptcha:
       site_key_label: Site Key
       title: FriendsOfFlarum reCAPTCHA
       type_label: reCAPTCHA Type
+    permissions:
+      post_without_captcha: Create posts and discussions without captcha
   forum:
     # This text is shown on the javascript error callback for reCAPTCHA.
     # This is a generic error handler and we don't have access to the reason, so the message has to be vague.
