@@ -1,4 +1,13 @@
 import Component from 'flarum/Component';
+import load from 'external-load';
+
+const addResources = async () => {
+    if (app.recaptchaLoaded) return;
+
+    await load.js(`https://www.recaptcha.net/recaptcha/api.js?hl=${app.translator.locale}&render=explicit`);
+
+    app.recaptchaLoaded = true;
+};
 
 export default class Recaptcha extends Component {
     view() {
@@ -11,21 +20,8 @@ export default class Recaptcha extends Component {
 
     oncreate(vnode) {
         super.oncreate(vnode);
-        
-        new Promise(resolve => {
-            if (app.recaptchaLoaded) {
-                return resolve();
-            }
 
-            app.recaptchaLoaded = true;
-
-            const script = document.createElement('script');
-            script.src = `https://www.recaptcha.net/recaptcha/api.js?hl=${app.translator.locale}&render=explicit`;
-            script.async = true;
-            script.defer = true;
-            script.onload = resolve;
-            document.body.appendChild(script);
-        }).then(() => {
+        addResources().then(() => {
             const interval = setInterval(() => {
                 if (window.recaptcha) {
                     clearInterval(interval);
