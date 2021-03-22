@@ -11,7 +11,28 @@ export default class Recaptcha extends Component {
 
     oncreate(vnode) {
         super.oncreate(vnode);
-        this.attrs.state.render(vnode.dom.querySelector('.g-recaptcha'));
+        
+        new Promise(resolve => {
+            if (app.recaptchaLoaded) {
+                return resolve();
+            }
+
+            app.recaptchaLoaded = true;
+
+            const script = document.createElement('script');
+            script.src = `https://www.recaptcha.net/recaptcha/api.js?hl=${app.translator.locale}&render=explicit`;
+            script.async = true;
+            script.defer = true;
+            script.onload = resolve;
+            document.body.appendChild(script);
+        }).then(() => {
+            const interval = setInterval(() => {
+                if (window.recaptcha) {
+                    clearInterval(interval);
+                    this.attrs.state.render(vnode.dom.querySelector('.g-recaptcha'));
+                }
+            }, 250);
+        });
 
         // It's possible to TAB into the reCAPTCHA iframe, and it's very confusing when using the invisible mode
         if (app.data['fof-recaptcha.type'] === 'invisible') {
