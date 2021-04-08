@@ -1,5 +1,5 @@
-import { extend, override } from 'flarum/extend';
-import SignUpModal from 'flarum/components/SignUpModal';
+import { extend, override } from 'flarum/common/extend';
+import SignUpModal from 'flarum/forum/components/SignUpModal';
 import Recaptcha from './components/Recaptcha';
 import RecaptchaState from './states/RecaptchaState';
 

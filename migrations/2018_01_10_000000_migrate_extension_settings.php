@@ -9,14 +9,15 @@
  * file that was distributed with this source code.
  */
 
+use Flarum\Settings\SettingsRepositoryInterface;
 use Illuminate\Database\Schema\Builder;
 
 return [
     'up' => function (Builder $schema) {
         /**
-         * @var \Flarum\Settings\SettingsRepositoryInterface
+         * @var $settings SettingsRepositoryInterface
          */
-        $settings = app('flarum.settings');
+        $settings = resolve(SettingsRepositoryInterface::class);
 
         if ($value = $settings->get($key = 'sijad-recaptcha.sitekey')) {
             $settings->set('fof-recaptcha.credentials.site', $value);

@@ -1,4 +1,4 @@
-import { extend, override } from 'flarum/extend';
+import { extend, override } from 'flarum/common/extend';
 import RecaptchaState from './states/RecaptchaState';
 import Recaptcha from './components/Recaptcha';
 

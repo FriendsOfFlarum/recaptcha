@@ -5,7 +5,7 @@ app.initializers.add('fof/recaptcha', () => {
         .for('fof-recaptcha')
         .registerSetting({
             label: app.translator.trans('fof-recaptcha.admin.settings.help_text', {
-                a: <a href="http://www.google.com/recaptcha/admin" target="_blank" />,
+                a: <a href="https://www.google.com/recaptcha/admin" target="_blank" rel="noopener" />,
             }),
             type: 'hidden',
         })

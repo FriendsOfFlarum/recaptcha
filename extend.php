@@ -27,8 +27,7 @@ return [
         ->content(Content\ExtensionSettings::class),
 
     (new Extend\Frontend('admin'))
-        ->js(__DIR__.'/js/dist/admin.js')
-        ->css(__DIR__.'/resources/less/admin.less'),
+        ->js(__DIR__.'/js/dist/admin.js'),
 
     new Extend\Locales(__DIR__.'/resources/locale'),
 
@@ -39,7 +38,7 @@ return [
 
     (new Extend\ApiSerializer(ForumSerializer::class))
         ->attribute('postWithoutCaptcha', function (ForumSerializer $serializer) {
-            return (bool) $serializer->getActor()->hasPermission('fof-recaptcha.postWithoutCaptcha');
+            return $serializer->getActor()->hasPermission('fof-recaptcha.postWithoutCaptcha');
         }),
 
     (new Extend\Validator(RecaptchaValidator::class))
