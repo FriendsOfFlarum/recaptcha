@@ -23,7 +23,6 @@ return [
     (new Extend\Frontend('forum'))
         ->js(__DIR__.'/js/dist/forum.js')
         ->css(__DIR__.'/resources/less/forum.less')
-        ->content(Content\AddRecaptchaJs::class)
         ->content(Content\ExtensionSettings::class),
 
     (new Extend\Frontend('admin'))
