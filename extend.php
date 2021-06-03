@@ -32,9 +32,7 @@ return [
     new Extend\Locales(__DIR__.'/resources/locale'),
 
     (new Extend\Settings())
-        ->serializeToForum('darkMode', 'theme_dark_mode', function ($val) {
-            return (bool) $val;
-        }),
+        ->serializeToForum('darkMode', 'theme_dark_mode', 'boolVal'),
 
     (new Extend\ApiSerializer(ForumSerializer::class))
         ->attribute('postWithoutCaptcha', function (ForumSerializer $serializer) {
