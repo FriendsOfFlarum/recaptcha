@@ -1,5 +1,6 @@
-import DiscussionComposer from 'flarum/components/DiscussionComposer';
-import ReplyComposer from 'flarum/components/ReplyComposer';
+import app from 'flarum/forum/app';
+import DiscussionComposer from 'flarum/forum/components/DiscussionComposer';
+import ReplyComposer from 'flarum/forum/components/ReplyComposer';
 import extendSignUp from './extendSignUp';
 import extendComposer from './extendComposer';
 

@@ -8,10 +8,10 @@ A [Flarum](http://flarum.org) extension. Increase your forum's security with Goo
 
 ### Installation
 
-Use [Bazaar](https://discuss.flarum.org/d/5151-flagrow-bazaar-the-extension-marketplace) or install manually with composer:
+Install with composer:
 
 ```sh
-composer require fof/recaptcha
+composer require fof/recaptcha:"*"
 ```
 
 ### Updating
@@ -24,6 +24,5 @@ composer update fof/recaptcha
 
 - [Packagist](https://packagist.org/packages/fof/recaptcha)
 - [GitHub](https://github.com/FriendsOfFlarum/recaptcha)
-- [Sijad's reCAPTCHA](https://github.com/sijad/flarum-ext-recaptcha)
 
 An extension by [FriendsOfFlarum](https://github.com/FriendsOfFlarum).

@@ -19,7 +19,7 @@
     }
   ],
   "require": {
-    "flarum/core": "^0.1.0-beta.16",
+    "flarum/core": "^1.0.0",
     "google/recaptcha": "^1.2"
   },
   "authors": [
@@ -49,7 +49,10 @@
         "name": "fas fa-robot",
         "backgroundColor": "#e74c3c",
         "color": "#fff"
-      }
+      },
+      "optional-dependencies": [
+        "fof/oauth"
+      ]
     },
     "flagrow": {
       "discuss": "https://discuss.flarum.org/d/18399"

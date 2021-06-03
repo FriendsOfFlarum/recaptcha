@@ -1,6 +1,10 @@
 import Component from 'flarum/common/Component';
 
 export default class Recaptcha extends Component {
+    oninit(vnode) {
+        super.oninit(vnode);
+    }
+
     view() {
         return (
             <div className="Form-group">
