@@ -5,9 +5,9 @@ import extendSignUp from './extendSignUp';
 import extendComposer from './extendComposer';
 
 app.initializers.add('fof/recaptcha', () => {
-    app.recaptchaLoaded = false;
+  app.recaptchaLoaded = false;
 
-    extendSignUp();
-    extendComposer(DiscussionComposer);
-    extendComposer(ReplyComposer);
+  extendSignUp();
+  extendComposer(DiscussionComposer);
+  extendComposer(ReplyComposer);
 });
