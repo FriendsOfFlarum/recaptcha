@@ -14,8 +14,8 @@ namespace FoF\ReCaptcha\Listeners;
 use Flarum\Foundation\AbstractValidator;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Illuminate\Validation\Validator;
-use ReCaptcha\RequestMethod\Post;
 use ReCaptcha\ReCaptcha;
+use ReCaptcha\RequestMethod\Post;
 
 class AddValidatorRule
 {
