@@ -1,4 +1,4 @@
-/* global grecaptcha, app */
+import app from 'flarum/forum/app';
 
 export default class RecaptchaState {
   constructor(callback, errorCallback = null) {

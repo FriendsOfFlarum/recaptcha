@@ -1,3 +1,4 @@
+import app from 'flarum/forum/app';
 import { extend, override } from 'flarum/common/extend';
 import RecaptchaState from './states/RecaptchaState';
 import Recaptcha from './components/Recaptcha';
