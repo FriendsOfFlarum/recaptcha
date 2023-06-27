@@ -11,6 +11,8 @@
 
 namespace FoF\ReCaptcha\Listeners;
 
+use Flarum\Api\ForgotPasswordValidator;
+use Flarum\Forum\LogInValidator;
 use Flarum\Foundation\AbstractValidator;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Illuminate\Validation\Validator;
@@ -42,5 +44,17 @@ class AddValidatorRule
                 return !empty($value) && (new ReCaptcha($secret, new Post('https://www.recaptcha.net/recaptcha/api/siteverify')))->verify($value)->isSuccess();
             }
         );
+
+        if ($flarumValidator instanceof LogInValidator && $this->settings->get('fof-recaptcha.signin')) {
+            $validator->addRules([
+                'g-recaptcha-response' => ['required', 'recaptcha'],
+            ]);
+        }
+
+        if ($flarumValidator instanceof ForgotPasswordValidator && $this->settings->get('fof-recaptcha.forgot')) {
+            $validator->addRules([
+                'g-recaptcha-response' => ['required', 'recaptcha'],
+            ]);
+        }
     }
 }

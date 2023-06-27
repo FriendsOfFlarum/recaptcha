@@ -11,9 +11,11 @@
 
 namespace FoF\ReCaptcha;
 
+use Flarum\Api\ForgotPasswordValidator;
 use Flarum\Api\Serializer\ForumSerializer;
 use Flarum\Discussion\Event\Saving as DiscussionSaving;
 use Flarum\Extend;
+use Flarum\Forum\LogInValidator;
 use Flarum\Post\Event\Saving as PostSaving;
 use Flarum\User\Event\Saving as UserSaving;
 use FoF\ReCaptcha\Listeners\AddValidatorRule;
@@ -31,7 +33,13 @@ return [
     new Extend\Locales(__DIR__.'/resources/locale'),
 
     (new Extend\Settings())
-        ->serializeToForum('darkMode', 'theme_dark_mode', 'boolVal'),
+        ->default('fof-recaptcha.signup', true)
+        ->default('fof-recaptcha.signin', true)
+        ->default('fof-recaptcha.forgot', true)
+        ->serializeToForum('darkMode', 'theme_dark_mode', 'boolVal')
+        ->serializeToForum('fof-recaptcha.signup', 'fof-recaptcha.signup', 'boolVal')
+        ->serializeToForum('fof-recaptcha.signin', 'fof-recaptcha.signin', 'boolVal')
+        ->serializeToForum('fof-recaptcha.forgot', 'fof-recaptcha.forgot', 'boolVal'),
 
     (new Extend\ApiSerializer(ForumSerializer::class))
         ->attribute('postWithoutCaptcha', function (ForumSerializer $serializer) {
@@ -39,6 +47,12 @@ return [
         }),
 
     (new Extend\Validator(RecaptchaValidator::class))
+        ->configure(AddValidatorRule::class),
+
+    (new Extend\Validator(LogInValidator::class))
+        ->configure(AddValidatorRule::class),
+
+    (new Extend\Validator(ForgotPasswordValidator::class))
         ->configure(AddValidatorRule::class),
 
     (new Extend\Event())

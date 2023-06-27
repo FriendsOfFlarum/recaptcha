@@ -4,12 +4,6 @@ app.initializers.add('fof/recaptcha', () => {
   app.extensionData
     .for('fof-recaptcha')
     .registerSetting({
-      label: app.translator.trans('fof-recaptcha.admin.settings.help_text', {
-        a: <a href="https://www.google.com/recaptcha/admin" target="_blank" rel="noopener" />,
-      }),
-      type: 'hidden',
-    })
-    .registerSetting({
       setting: 'fof-recaptcha.type',
       label: app.translator.trans('fof-recaptcha.admin.settings.type_label'),
       options: {
@@ -25,12 +19,30 @@ app.initializers.add('fof/recaptcha', () => {
       label: app.translator.trans('fof-recaptcha.admin.settings.site_key_label'),
       type: 'text',
       required: true,
+      help: app.translator.trans('fof-recaptcha.admin.settings.help_text', {
+        a: <a href="https://www.google.com/recaptcha/admin" target="_blank" rel="noopener" />,
+      }),
     })
     .registerSetting({
       setting: 'fof-recaptcha.credentials.secret',
       label: app.translator.trans('fof-recaptcha.admin.settings.secret_key_label'),
       type: 'password',
       required: true,
+    })
+    .registerSetting({
+      setting: 'fof-recaptcha.signup',
+      type: 'bool',
+      label: app.translator.trans('fof-recaptcha.admin.settings.signup'),
+    })
+    .registerSetting({
+      setting: 'fof-recaptcha.signin',
+      type: 'bool',
+      label: app.translator.trans('fof-recaptcha.admin.settings.signin'),
+    })
+    .registerSetting({
+      setting: 'fof-recaptcha.forgot',
+      type: 'bool',
+      label: app.translator.trans('fof-recaptcha.admin.settings.forgot'),
     })
     .registerPermission(
       {
