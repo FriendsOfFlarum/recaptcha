@@ -58,9 +58,7 @@ export const addRecaptchaToAuthModal = <T extends typeof ForgotPasswordModal | t
   });
 
   override(modal.prototype, 'onsubmit', function (original, e) {
-    if (!isEnabled()) return;
-
-    if (isInvisible && !e.isRecaptchaSecondStep) {
+    if (isEnabled() && isInvisible && !e.isRecaptchaSecondStep) {
       // When recaptcha is invisible, onsubmit will be called two times
       // First time with normal event, we will call recaptcha.execute
       // Second time is called from recaptcha callback with a special isRecaptcha attribute
