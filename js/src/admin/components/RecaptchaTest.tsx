@@ -124,10 +124,10 @@ export default class RecaptchaTest extends Component<any, RecaptchaState | null>
 
   onerror(error) {
     const alert = error.alert || error;
-    1;
+
     this.loading = false;
     this.alertAttrs = alert;
-    this.state.reset();
+    this.state?.reset();
     m.redraw();
   }
 }
