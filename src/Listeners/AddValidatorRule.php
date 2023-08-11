@@ -18,8 +18,6 @@ use Flarum\Settings\SettingsRepositoryInterface;
 use FoF\ReCaptcha\ReCaptcha\GuzzleRequestMethod;
 use Illuminate\Validation\Validator;
 use ReCaptcha\ReCaptcha;
-use ReCaptcha\RequestMethod\CurlPost;
-use ReCaptcha\RequestMethod\Post;
 
 class AddValidatorRule
 {
@@ -43,13 +41,16 @@ class AddValidatorRule
         $validator->addExtension(
             'recaptcha',
             function ($attribute, $value, $parameters) use ($validator, $secret) {
-                if (empty($value)) return false;
+                if (empty($value)) {
+                    return false;
+                }
 
                 $verification = (new ReCaptcha($secret, new GuzzleRequestMethod('https://www.recaptcha.net/recaptcha/api/siteverify')))->verify($value);
 
                 if (!empty($verification->getErrorCodes())) {
-                    $validator->setCustomMessages([
-                        'recaptcha' => resolve('translator')->trans('validation.recaptcha-unknown', ['errors' => implode(', ', $verification->getErrorCodes())])]
+                    $validator->setCustomMessages(
+                        [
+                            'recaptcha' => resolve('translator')->trans('validation.recaptcha-unknown', ['errors' => implode(', ', $verification->getErrorCodes())])]
                     );
                 }
 
