@@ -24,11 +24,11 @@ use FoF\ReCaptcha\Validators\RecaptchaValidator;
 return [
     (new Extend\Frontend('forum'))
         ->js(__DIR__.'/js/dist/forum.js')
-        ->css(__DIR__.'/resources/less/forum.less')
-        ->content(Content\ExtensionSettings::class),
+        ->css(__DIR__.'/resources/less/forum.less'),
 
     (new Extend\Frontend('admin'))
-        ->js(__DIR__.'/js/dist/admin.js'),
+        ->js(__DIR__.'/js/dist/admin.js')
+        ->css(__DIR__ . '/resources/less/admin.less'),
 
     new Extend\Locales(__DIR__.'/resources/locale'),
 
@@ -36,10 +36,15 @@ return [
         ->default('fof-recaptcha.signup', true)
         ->default('fof-recaptcha.signin', true)
         ->default('fof-recaptcha.forgot', true)
-        ->serializeToForum('darkMode', 'theme_dark_mode', 'boolVal')
+        ->serializeToForum('theme_dark_mode', 'theme_dark_mode', 'boolVal')
+        ->serializeToForum('fof-recaptcha.credentials.site', 'fof-recaptcha.credentials.site')
+        ->serializeToForum('fof-recaptcha.type', 'fof-recaptcha.type')
         ->serializeToForum('fof-recaptcha.signup', 'fof-recaptcha.signup', 'boolVal')
         ->serializeToForum('fof-recaptcha.signin', 'fof-recaptcha.signin', 'boolVal')
         ->serializeToForum('fof-recaptcha.forgot', 'fof-recaptcha.forgot', 'boolVal'),
+
+    (new Extend\Routes('api'))
+        ->post('/fof/recaptcha/test', 'fof-recaptcha.test', Api\Controller\TestReCaptchaController::class),
 
     (new Extend\ApiSerializer(ForumSerializer::class))
         ->attribute('postWithoutCaptcha', function (ForumSerializer $serializer) {

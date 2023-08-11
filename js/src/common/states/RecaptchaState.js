@@ -1,7 +1,8 @@
-import app from 'flarum/forum/app';
+import app from 'flarum/common/app';
 
 export default class RecaptchaState {
-  constructor(callback, errorCallback = null) {
+  constructor(settings, callback, errorCallback = null) {
+    this.settings = settings;
     this.callback = callback;
     this.errorCallback =
       errorCallback ||
@@ -10,14 +11,16 @@ export default class RecaptchaState {
         app.alerts.show(alertAttrs);
       });
     this.widgetId = null;
+
+    this.type = this.settings['fof-recaptcha.type'];
   }
 
   render(element) {
     this.widgetId = grecaptcha.render(element, {
-      sitekey: app.data['fof-recaptcha.credentials.site'],
-      theme: app.forum.attribute('darkMode') ? 'dark' : 'light',
-      type: app.data['fof-recaptcha.type'],
-      size: app.data['fof-recaptcha.type'] === 'invisible' ? 'invisible' : 'normal',
+      sitekey: this.settings['fof-recaptcha.credentials.site'],
+      theme: !!Number(this.settings['theme_dark_mode']) ? 'dark' : 'light',
+      type: this.type,
+      size: this.settings['fof-recaptcha.type'] === 'invisible' ? 'invisible' : 'normal',
       callback: this.callback,
       'error-callback': () => {
         // Similarly to error.alert, we create an alert payload that can then be shown in-context depending where the code is called from
@@ -40,5 +43,9 @@ export default class RecaptchaState {
 
   reset() {
     return grecaptcha.reset(this.widgetId);
+  }
+
+  isInvisible() {
+    return this.type === 'invisible';
   }
 }

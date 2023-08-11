@@ -4,8 +4,8 @@ import LogInModal from 'flarum/forum/components/LogInModal';
 import SignUpModal from 'flarum/forum/components/SignUpModal';
 import { extend, override } from 'flarum/common/extend';
 
-import RecaptchaState from './states/RecaptchaState';
-import Recaptcha from './components/Recaptcha';
+import RecaptchaState from '../common/states/RecaptchaState';
+import Recaptcha from '../common/components/Recaptcha';
 
 export const addRecaptchaToAuthModal = <T extends typeof ForgotPasswordModal | typeof LogInModal | typeof SignUpModal>({
   modal,
@@ -16,15 +16,15 @@ export const addRecaptchaToAuthModal = <T extends typeof ForgotPasswordModal | t
   type: string;
   dataMethod: string;
 }) => {
-  const isInvisible = app.data['fof-recaptcha.type'] === 'invisible';
   const isEnabled = () => !!app.forum.attribute(`fof-recaptcha.${type}`);
 
   extend(modal.prototype, 'oninit', function () {
     if (!isEnabled()) return;
 
     this.recaptcha = new RecaptchaState(
+      app.forum.data.attributes,
       () => {
-        if (isInvisible) {
+        if (this.recaptcha.isInvisible()) {
           // Create "fake" event so this works when other extensions extend onsubmit as well
           const event = new Event('submit');
           event.isRecaptchaSecondStep = true;
@@ -58,7 +58,7 @@ export const addRecaptchaToAuthModal = <T extends typeof ForgotPasswordModal | t
   });
 
   override(modal.prototype, 'onsubmit', function (original, e) {
-    if (isEnabled() && isInvisible && !e.isRecaptchaSecondStep) {
+    if (isEnabled() && this.recaptcha.isInvisible() && !e.isRecaptchaSecondStep) {
       // When recaptcha is invisible, onsubmit will be called two times
       // First time with normal event, we will call recaptcha.execute
       // Second time is called from recaptcha callback with a special isRecaptcha attribute
