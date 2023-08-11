@@ -6,6 +6,7 @@ app.initializers.add('fof/recaptcha', () => {
     .registerSetting({
       setting: 'fof-recaptcha.type',
       label: app.translator.trans('fof-recaptcha.admin.settings.type_label'),
+      help: app.translator.trans('fof-recaptcha.admin.settings.type_help'),
       options: {
         checkbox: 'Checkbox',
         invisible: 'Invisible',
