@@ -1,8 +1,10 @@
 import app from 'flarum/admin/app';
+import RecaptchaPage from './components/RecaptchaPage';
 
 app.initializers.add('fof/recaptcha', () => {
   app.extensionData
     .for('fof-recaptcha')
+    .registerPage(RecaptchaPage)
     .registerSetting({
       setting: 'fof-recaptcha.type',
       label: app.translator.trans('fof-recaptcha.admin.settings.type_label'),

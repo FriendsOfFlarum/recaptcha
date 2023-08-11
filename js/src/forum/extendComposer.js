@@ -1,18 +1,16 @@
 import app from 'flarum/forum/app';
 import { extend, override } from 'flarum/common/extend';
-import RecaptchaState from './states/RecaptchaState';
-import Recaptcha from './components/Recaptcha';
+import RecaptchaState from '../common/states/RecaptchaState';
+import Recaptcha from '../common/components/Recaptcha';
 
 export default function (Composer) {
-  const isInvisible = app.data['fof-recaptcha.type'] === 'invisible';
-
   extend(Composer.prototype, 'oninit', function () {
     if (app.forum.attribute('postWithoutCaptcha')) {
       return;
     }
 
-    this.recaptcha = new RecaptchaState(() => {
-      if (isInvisible) {
+    this.recaptcha = new RecaptchaState(app.forum.data.attributes, () => {
+      if (this.recaptcha.isInvisible()) {
         // onsubmit is usually called without any argument.
         // We use the first argument to indicate the second call after invisible recaptcha
         this.onsubmit('recaptchaSecondStep');
@@ -52,7 +50,7 @@ export default function (Composer) {
   });
 
   override(Composer.prototype, 'onsubmit', function (original, argument1) {
-    if (!app.forum.attribute('postWithoutCaptcha') && isInvisible && argument1 !== 'recaptchaSecondStep') {
+    if (!app.forum.attribute('postWithoutCaptcha') && this.recaptcha.isInvisible() && argument1 !== 'recaptchaSecondStep') {
       this.loading = true;
       this.recaptcha.execute();
       return;

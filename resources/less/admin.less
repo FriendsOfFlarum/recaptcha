@@ -1,0 +1,29 @@
+.fof-recaptcha-Page {
+  .FoFReCaptchaTestForm {
+    min-width: 300px;
+    max-width: 500px;
+    width: fit-content;
+    overflow: hidden;
+
+    .helpText--danger {
+      color: var(--control-danger-color);
+      font-weight: bold;
+    }
+
+    .Form-group--recaptcha .Form-group {
+      margin-top: 20px;
+    }
+
+    &.isInvisible {
+      .Form-group--recaptcha .Form-group {
+        height: 60px;
+        position: relative;
+
+        .grecaptcha-badge {
+          position: absolute !important;
+          bottom: 0 !important;
+        }
+      }
+    }
+  }
+}
