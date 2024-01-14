@@ -51,10 +51,15 @@ export const addRecaptchaToAuthModal = <T extends typeof ForgotPasswordModal | t
     fields.add('recaptcha', <Recaptcha state={this.recaptcha} />, -5);
   });
 
-  extend(modal.prototype, 'onerror', function () {
+  extend(modal.prototype, 'onerror', function (_, error) {
     if (!isEnabled()) return;
 
     this.recaptcha.reset();
+
+    // Set custom error message during login because no error comes back from /login when recaptcha fails
+    if (type === 'signin' && error.alert && (!error.alert.content || !error.alert.content.length)) {
+      error.alert.content = app.translator.trans('fof-recaptcha.forum.unknown_error');
+    }
   });
 
   override(modal.prototype, 'onsubmit', function (original, e) {

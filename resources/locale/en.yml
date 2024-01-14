@@ -27,6 +27,7 @@ fof-recaptcha:
     # This text is shown on the javascript error callback for reCAPTCHA.
     # This is a generic error handler and we don't have access to the reason, so the message has to be vague.
     error: There was an error submitting reCAPTCHA. Try again.
+    unknown_error: An unknown error occurred. Check the captcha and try again.
 
 validation:
   recaptcha: reCAPTCHA validation failed.
