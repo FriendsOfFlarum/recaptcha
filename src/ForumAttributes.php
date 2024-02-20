@@ -21,7 +21,7 @@ class ForumAttributes
      */
     protected $settings;
 
-    function __construct(SettingsRepositoryInterface $settings)
+    public function __construct(SettingsRepositoryInterface $settings)
     {
         $this->settings = $settings;
     }

@@ -55,7 +55,7 @@ class AddValidatorRule
                 if (!empty($verification->getErrorCodes())) {
                     $validator->setCustomMessages(
                         [
-                            'recaptcha' => resolve('translator')->trans('validation.recaptcha-unknown', ['errors' => implode(', ', $verification->getErrorCodes())])
+                            'recaptcha' => resolve('translator')->trans('validation.recaptcha-unknown', ['errors' => implode(', ', $verification->getErrorCodes())]),
                         ]
                     );
                 }
