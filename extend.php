@@ -23,14 +23,14 @@ use FoF\ReCaptcha\Validators\RecaptchaValidator;
 
 return [
     (new Extend\Frontend('forum'))
-        ->js(__DIR__.'/js/dist/forum.js')
-        ->css(__DIR__.'/resources/less/forum.less'),
+        ->js(__DIR__ . '/js/dist/forum.js')
+        ->css(__DIR__ . '/resources/less/forum.less'),
 
     (new Extend\Frontend('admin'))
-        ->js(__DIR__.'/js/dist/admin.js')
-        ->css(__DIR__.'/resources/less/admin.less'),
+        ->js(__DIR__ . '/js/dist/admin.js')
+        ->css(__DIR__ . '/resources/less/admin.less'),
 
-    new Extend\Locales(__DIR__.'/resources/locale'),
+    new Extend\Locales(__DIR__ . '/resources/locale'),
 
     (new Extend\Settings())
         ->default('fof-recaptcha.signup', true)
@@ -47,9 +47,7 @@ return [
         ->post('/fof/recaptcha/test', 'fof-recaptcha.test', Api\Controller\TestReCaptchaController::class),
 
     (new Extend\ApiSerializer(ForumSerializer::class))
-        ->attribute('postWithoutCaptcha', function (ForumSerializer $serializer) {
-            return $serializer->getActor()->hasPermission('fof-recaptcha.postWithoutCaptcha');
-        }),
+        ->attributes(ForumAttributes::class),
 
     (new Extend\Validator(RecaptchaValidator::class))
         ->configure(AddValidatorRule::class),
