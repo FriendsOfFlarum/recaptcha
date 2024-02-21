@@ -17,6 +17,6 @@ class Utils
 {
     public static function isExtensionSetup(SettingsRepositoryInterface $settings): bool
     {
-        return $settings->get('fof-recaptcha.credentials.site', '') !== '' && $settings->get('fof-recaptcha.credentials.secret', '') !== '';
+        return trim($settings->get('fof-recaptcha.credentials.site', '')) !== '' && trim($settings->get('fof-recaptcha.credentials.secret', '')) !== '';
     }
 }
