@@ -12,6 +12,8 @@
 namespace FoF\ReCaptcha\Listeners;
 
 use Flarum\Discussion\Event\Saving;
+use Flarum\Settings\SettingsRepositoryInterface;
+use FoF\ReCaptcha\Utils;
 use FoF\ReCaptcha\Validators\RecaptchaValidator;
 use Illuminate\Support\Arr;
 
@@ -23,15 +25,22 @@ class StartDiscussionValidate
     protected $validator;
 
     /**
-     * @param RecaptchaValidator $validator
+     * @var SettingsRepositoryInterface
      */
-    public function __construct(RecaptchaValidator $validator)
+    protected $settings;
+
+    public function __construct(RecaptchaValidator $validator, SettingsRepositoryInterface $settings)
     {
         $this->validator = $validator;
+        $this->settings = $settings;
     }
 
     public function handle(Saving $event)
     {
+        if (!Utils::isExtensionSetup($this->settings)) {
+            return;
+        }
+
         if (!$event->discussion->exists) {
             if ($event->actor->hasPermission('fof-recaptcha.postWithoutCaptcha')) {
                 return;

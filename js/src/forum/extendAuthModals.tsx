@@ -19,6 +19,7 @@ export const addRecaptchaToAuthModal = <T extends typeof ForgotPasswordModal | t
   const isEnabled = () => !!app.forum.attribute(`fof-recaptcha.${type}`);
 
   extend(modal.prototype, 'oninit', function () {
+    if (!app.forum.attribute('fof-recaptcha.configured')) return;
     if (!isEnabled()) return;
 
     this.recaptcha = new RecaptchaState(
@@ -40,18 +41,21 @@ export const addRecaptchaToAuthModal = <T extends typeof ForgotPasswordModal | t
   });
 
   extend(modal.prototype, dataMethod, function (data) {
+    if (!app.forum.attribute('fof-recaptcha.configured')) return;
     if (!isEnabled()) return;
 
     data['g-recaptcha-response'] = this.recaptcha.getResponse();
   });
 
   extend(modal.prototype, 'fields', function (fields) {
+    if (!app.forum.attribute('fof-recaptcha.configured')) return;
     if (!isEnabled()) return;
 
     fields.add('recaptcha', <Recaptcha state={this.recaptcha} />, -5);
   });
 
   extend(modal.prototype, 'onerror', function (_, error) {
+    if (!app.forum.attribute('fof-recaptcha.configured')) return;
     if (!isEnabled()) return;
 
     this.recaptcha.reset();
@@ -63,7 +67,7 @@ export const addRecaptchaToAuthModal = <T extends typeof ForgotPasswordModal | t
   });
 
   override(modal.prototype, 'onsubmit', function (original, e) {
-    if (isEnabled() && this.recaptcha.isInvisible() && !e.isRecaptchaSecondStep) {
+    if (app.forum.attribute('fof-recaptcha.configured') && isEnabled() && this.recaptcha.isInvisible() && !e.isRecaptchaSecondStep) {
       // When recaptcha is invisible, onsubmit will be called two times
       // First time with normal event, we will call recaptcha.execute
       // Second time is called from recaptcha callback with a special isRecaptcha attribute

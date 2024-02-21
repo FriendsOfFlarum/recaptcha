@@ -13,6 +13,7 @@ namespace FoF\ReCaptcha\Listeners;
 
 use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\User\Event\Saving;
+use FoF\ReCaptcha\Utils;
 use FoF\ReCaptcha\Validators\RecaptchaValidator;
 use Illuminate\Support\Arr;
 
@@ -39,6 +40,10 @@ class RegisterValidate
 
     public function handle(Saving $event)
     {
+        if (!Utils::isExtensionSetup($this->settings)) {
+            return;
+        }
+
         // We also check for the actor's admin status, so that we can allow admins to create users from the admin panel without recaptcha blocking the action.
         if (!$event->user->exists && $this->settings->get('fof-recaptcha.signup') && !$event->actor->isAdmin()) {
             $this->validator->assertValid([

@@ -5,7 +5,7 @@ import Recaptcha from '../common/components/Recaptcha';
 
 export default function (Composer) {
   extend(Composer.prototype, 'oninit', function () {
-    if (app.forum.attribute('postWithoutCaptcha')) {
+    if (!app.forum.attribute('fof-recaptcha.configured') || app.forum.attribute('postWithoutCaptcha')) {
       return;
     }
 
@@ -19,7 +19,7 @@ export default function (Composer) {
   });
 
   extend(Composer.prototype, 'data', function (data) {
-    if (app.forum.attribute('postWithoutCaptcha')) {
+    if (!app.forum.attribute('fof-recaptcha.configured') || app.forum.attribute('postWithoutCaptcha')) {
       return;
     }
 
@@ -27,7 +27,7 @@ export default function (Composer) {
   });
 
   extend(Composer.prototype, 'headerItems', function (fields) {
-    if (app.forum.attribute('postWithoutCaptcha')) {
+    if (!app.forum.attribute('fof-recaptcha.configured') || app.forum.attribute('postWithoutCaptcha')) {
       return;
     }
 
@@ -42,7 +42,7 @@ export default function (Composer) {
 
   // There's no onerror handler on composer classes, but we can react to loaded which is called after errors
   extend(Composer.prototype, 'loaded', function () {
-    if (app.forum.attribute('postWithoutCaptcha')) {
+    if (!app.forum.attribute('fof-recaptcha.configured') || app.forum.attribute('postWithoutCaptcha')) {
       return;
     }
 
@@ -50,7 +50,10 @@ export default function (Composer) {
   });
 
   override(Composer.prototype, 'onsubmit', function (original, argument1) {
-    if (!app.forum.attribute('postWithoutCaptcha') && this.recaptcha.isInvisible() && argument1 !== 'recaptchaSecondStep') {
+    if (
+      app.forum.attribute('fof-recaptcha.configured') ||
+      (!app.forum.attribute('postWithoutCaptcha') && this.recaptcha.isInvisible() && argument1 !== 'recaptchaSecondStep')
+    ) {
       this.loading = true;
       this.recaptcha.execute();
       return;

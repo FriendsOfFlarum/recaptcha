@@ -16,6 +16,7 @@ use Flarum\Forum\LogInValidator;
 use Flarum\Foundation\AbstractValidator;
 use Flarum\Settings\SettingsRepositoryInterface;
 use FoF\ReCaptcha\ReCaptcha\GuzzleRequestMethod;
+use FoF\ReCaptcha\Utils;
 use Illuminate\Validation\Validator;
 use ReCaptcha\ReCaptcha;
 
@@ -36,6 +37,10 @@ class AddValidatorRule
 
     public function __invoke(AbstractValidator $flarumValidator, Validator $validator)
     {
+        if (!Utils::isExtensionSetup($this->settings)) {
+            return;
+        }
+
         $secret = $this->settings->get('fof-recaptcha.credentials.secret');
 
         $validator->addExtension(
@@ -50,7 +55,8 @@ class AddValidatorRule
                 if (!empty($verification->getErrorCodes())) {
                     $validator->setCustomMessages(
                         [
-                            'recaptcha' => resolve('translator')->trans('validation.recaptcha-unknown', ['errors' => implode(', ', $verification->getErrorCodes())])]
+                            'recaptcha' => resolve('translator')->trans('validation.recaptcha-unknown', ['errors' => implode(', ', $verification->getErrorCodes())]),
+                        ]
                     );
                 }
 

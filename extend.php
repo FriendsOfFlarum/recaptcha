@@ -47,9 +47,7 @@ return [
         ->post('/fof/recaptcha/test', 'fof-recaptcha.test', Api\Controller\TestReCaptchaController::class),
 
     (new Extend\ApiSerializer(ForumSerializer::class))
-        ->attribute('postWithoutCaptcha', function (ForumSerializer $serializer) {
-            return $serializer->getActor()->hasPermission('fof-recaptcha.postWithoutCaptcha');
-        }),
+        ->attributes(ForumAttributes::class),
 
     (new Extend\Validator(RecaptchaValidator::class))
         ->configure(AddValidatorRule::class),
