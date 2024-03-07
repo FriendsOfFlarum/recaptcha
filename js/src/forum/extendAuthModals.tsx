@@ -1,5 +1,6 @@
 import app from 'flarum/forum/app';
 import ForgotPasswordModal from 'flarum/forum/components/ForgotPasswordModal';
+import ChangePasswordModal from 'flarum/forum/components/ChangePasswordModal';
 import LogInModal from 'flarum/forum/components/LogInModal';
 import SignUpModal from 'flarum/forum/components/SignUpModal';
 import { extend, override } from 'flarum/common/extend';
@@ -7,7 +8,7 @@ import { extend, override } from 'flarum/common/extend';
 import RecaptchaState from '../common/states/RecaptchaState';
 import Recaptcha from '../common/components/Recaptcha';
 
-export const addRecaptchaToAuthModal = <T extends typeof ForgotPasswordModal | typeof LogInModal | typeof SignUpModal>({
+export const addRecaptchaToAuthModal = <T extends typeof ForgotPasswordModal  | typeof ChangePasswordModal | typeof LogInModal | typeof SignUpModal>({
   modal,
   type,
   dataMethod,
@@ -83,6 +84,7 @@ export const addRecaptchaToAuthModal = <T extends typeof ForgotPasswordModal | t
 
 export default () => {
   addRecaptchaToAuthModal({ modal: ForgotPasswordModal, type: 'forgot', dataMethod: 'requestParams' });
+  addRecaptchaToAuthModal({ modal: ChangePasswordModal, type: 'forgot', dataMethod: 'requestBody' });
   addRecaptchaToAuthModal({ modal: LogInModal, type: 'signin', dataMethod: 'loginParams' });
   addRecaptchaToAuthModal({ modal: SignUpModal, type: 'signup', dataMethod: 'submitData' });
 };
