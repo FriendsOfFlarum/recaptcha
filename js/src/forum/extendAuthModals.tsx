@@ -8,7 +8,7 @@ import { extend, override } from 'flarum/common/extend';
 import RecaptchaState from '../common/states/RecaptchaState';
 import Recaptcha from '../common/components/Recaptcha';
 
-export const addRecaptchaToAuthModal = <T extends typeof ForgotPasswordModal  | typeof ChangePasswordModal | typeof LogInModal | typeof SignUpModal>({
+export const addRecaptchaToAuthModal = <T extends typeof ForgotPasswordModal | typeof ChangePasswordModal | typeof LogInModal | typeof SignUpModal>({
   modal,
   type,
   dataMethod,

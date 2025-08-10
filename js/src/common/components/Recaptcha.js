@@ -17,7 +17,7 @@ export default class Recaptcha extends Component {
 
   view() {
     return (
-      <div className="Form-group">
+      <div className="Form-group" id="fof-recaptcha">
         <div className="g-recaptcha" />
       </div>
     );

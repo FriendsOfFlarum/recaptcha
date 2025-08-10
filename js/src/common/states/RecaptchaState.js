@@ -20,7 +20,8 @@ export default class RecaptchaState {
       sitekey: this.settings['fof-recaptcha.credentials.site'],
       theme: !!Number(this.settings['theme_dark_mode']) ? 'dark' : 'light',
       type: this.type,
-      size: this.settings['fof-recaptcha.type'] === 'invisible' ? 'invisible' : 'normal',
+      size: this.isInvisible() ? 'invisible' : 'normal',
+      tabindex: this.isInvisible() ? -1 : null,
       callback: this.callback,
       'error-callback': () => {
         // Similarly to error.alert, we create an alert payload that can then be shown in-context depending where the code is called from

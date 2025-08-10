@@ -12,4 +12,34 @@
 
 .ComposerBody-header .item-recaptcha {
   display: block; // So it's always on its own line
+  padding-top: 5px;
+}
+
+@media (max-width: 767px) {
+  // Make recaptcha smaller on mobile
+  #fof-recaptcha {
+    box-sizing: content-box;
+    height: 78px * 0.77; // captcha original height * 77%
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    .g-recaptcha {
+      transform:scale(0.77);
+      transform-origin: center 0;
+    }
+  }
+
+  .Composer:not(.minimized):has(.item-recaptcha) {
+    // Increase height of mobile composer to accommodate the recaptcha
+    height: 425px !important;
+
+    #fof-recaptcha {
+      justify-content: left;
+
+      .g-recaptcha {
+        transform-origin: 0 0;
+      }
+    }
+  }
 }
