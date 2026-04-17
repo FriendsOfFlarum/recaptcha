@@ -1,8 +1,4 @@
 import app from 'flarum/forum/app';
-import ForgotPasswordModal from 'flarum/forum/components/ForgotPasswordModal';
-import ChangePasswordModal from 'flarum/forum/components/ChangePasswordModal';
-import LogInModal from 'flarum/forum/components/LogInModal';
-import SignUpModal from 'flarum/forum/components/SignUpModal';
 import { extend, override } from 'flarum/common/extend';
 
 import RecaptchaState from '../common/states/RecaptchaState';
