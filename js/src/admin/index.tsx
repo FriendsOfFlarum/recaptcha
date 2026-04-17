@@ -2,7 +2,7 @@ import app from 'flarum/admin/app';
 import RecaptchaPage from './components/RecaptchaPage';
 
 app.initializers.add('fof/recaptcha', () => {
-  app.extensionData
+  app.registry
     .for('fof-recaptcha')
     .registerPage(RecaptchaPage)
     .registerSetting({
