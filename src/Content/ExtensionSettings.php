@@ -16,18 +16,12 @@ use Flarum\Settings\SettingsRepositoryInterface;
 
 class ExtensionSettings
 {
-    /**
-     * @var SettingsRepositoryInterface
-     */
-    protected $settings;
-
     protected $prefix = 'fof-recaptcha.';
 
     protected $keys = ['credentials.site', 'type'];
 
-    public function __construct(SettingsRepositoryInterface $settings)
+    public function __construct(protected SettingsRepositoryInterface $settings)
     {
-        $this->settings = $settings;
     }
 
     public function __invoke(Document $document)

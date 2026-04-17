@@ -18,7 +18,7 @@ class RecaptchaValidator extends AbstractValidator
     /**
      * {@inheritdoc}
      */
-    protected $rules = [
+    protected array $rules = [
         'recaptcha' => [
             'required',
             'recaptcha',

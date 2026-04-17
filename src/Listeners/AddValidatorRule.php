@@ -22,17 +22,8 @@ use ReCaptcha\ReCaptcha;
 
 class AddValidatorRule
 {
-    /**
-     * @var SettingsRepositoryInterface
-     */
-    protected $settings;
-
-    /**
-     * @param SettingsRepositoryInterface $settings
-     */
-    public function __construct(SettingsRepositoryInterface $settings)
+    public function __construct(protected SettingsRepositoryInterface $settings)
     {
-        $this->settings = $settings;
     }
 
     public function __invoke(AbstractValidator $flarumValidator, Validator $validator)

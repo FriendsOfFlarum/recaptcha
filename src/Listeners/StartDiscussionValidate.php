@@ -19,20 +19,8 @@ use Illuminate\Support\Arr;
 
 class StartDiscussionValidate
 {
-    /**
-     * @var RecaptchaValidator
-     */
-    protected $validator;
-
-    /**
-     * @var SettingsRepositoryInterface
-     */
-    protected $settings;
-
-    public function __construct(RecaptchaValidator $validator, SettingsRepositoryInterface $settings)
+    public function __construct(protected RecaptchaValidator $validator, protected SettingsRepositoryInterface $settings)
     {
-        $this->validator = $validator;
-        $this->settings = $settings;
     }
 
     public function handle(Saving $event)

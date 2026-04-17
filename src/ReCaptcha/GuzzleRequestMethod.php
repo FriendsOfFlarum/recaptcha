@@ -25,9 +25,6 @@ class GuzzleRequestMethod implements RequestMethod
      */
     private $siteVerifyUrl;
 
-    /**
-     * @param $siteVerifyUrl string|null
-     */
     public function __construct(?string $siteVerifyUrl = null)
     {
         $this->siteVerifyUrl = $siteVerifyUrl ?? ReCaptcha::SITE_VERIFY_URL;

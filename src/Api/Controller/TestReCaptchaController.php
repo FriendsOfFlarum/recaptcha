@@ -21,14 +21,8 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class TestReCaptchaController implements RequestHandlerInterface
 {
-    /**
-     * @var RecaptchaValidator
-     */
-    protected $validator;
-
-    public function __construct(RecaptchaValidator $validator)
+    public function __construct(protected RecaptchaValidator $validator)
     {
-        $this->validator = $validator;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
