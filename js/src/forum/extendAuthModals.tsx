@@ -1,90 +1,138 @@
 import app from 'flarum/forum/app';
-import ForgotPasswordModal from 'flarum/forum/components/ForgotPasswordModal';
-import ChangePasswordModal from 'flarum/forum/components/ChangePasswordModal';
-import LogInModal from 'flarum/forum/components/LogInModal';
-import SignUpModal from 'flarum/forum/components/SignUpModal';
 import { extend, override } from 'flarum/common/extend';
-
+import type ItemList from 'flarum/common/utils/ItemList';
+import type Mithril from 'mithril';
+import type { AlertAttrs } from 'flarum/common/components/Alert';
 import RecaptchaState from '../common/states/RecaptchaState';
 import Recaptcha from '../common/components/Recaptcha';
 
-export const addRecaptchaToAuthModal = <T extends typeof ForgotPasswordModal | typeof ChangePasswordModal | typeof LogInModal | typeof SignUpModal>({
-  modal,
-  type,
-  dataMethod,
-}: {
-  modal: T;
-  type: string;
+interface ModalWithRecaptcha {
+  recaptcha: RecaptchaState;
+  recaptchaToken: string | null;
+  alertAttrs: AlertAttrs | null;
+  loading: boolean;
+  loaded(): void;
+  onsubmit(e: Event): void;
+}
+
+type AuthModalKind = 'signup' | 'signin' | 'forgot';
+
+interface AuthModalConfig {
+  modulePath: string;
+  type: AuthModalKind;
   dataMethod: string;
-}) => {
+}
+
+function applyAuthModalExtension({ modulePath, type, dataMethod }: AuthModalConfig): void {
   const isEnabled = () => !!app.forum.attribute(`fof-recaptcha.${type}`);
+  const shouldApply = () => !!app.forum.attribute('fof-recaptcha.configured') && isEnabled();
 
-  extend(modal.prototype, 'oninit', function () {
-    if (!app.forum.attribute('fof-recaptcha.configured')) return;
-    if (!isEnabled()) return;
+  extend(modulePath, 'oninit', function () {
+    if (!shouldApply()) return;
 
-    this.recaptcha = new RecaptchaState(
-      app.forum.data.attributes,
+    const self = this as unknown as ModalWithRecaptcha;
+
+    self.recaptcha = new RecaptchaState(
+      app.forum.data!.attributes as Record<string, string>,
+      type,
       () => {
-        if (this.recaptcha.isInvisible()) {
-          // Create "fake" event so this works when other extensions extend onsubmit as well
-          const event = new Event('submit');
-          event.isRecaptchaSecondStep = true;
-          this.onsubmit(event);
-        }
+        // Callback is unused; acquireToken() handles invisible/v3 and checkbox is read synchronously.
       },
       (alertAttrs) => {
-        // Removes the spinner on the submit button so we can try again
-        this.loaded();
-        this.alertAttrs = alertAttrs;
+        // Removes the spinner on the submit button so we can try again.
+        self.loaded();
+        self.alertAttrs = alertAttrs;
       }
     );
+    self.recaptchaToken = null;
   });
 
-  extend(modal.prototype, dataMethod, function (data) {
-    if (!app.forum.attribute('fof-recaptcha.configured')) return;
-    if (!isEnabled()) return;
+  extend(modulePath, dataMethod, function (data: Record<string, unknown>) {
+    if (!shouldApply()) return;
 
-    data['g-recaptcha-response'] = this.recaptcha.getResponse();
+    const self = this as unknown as ModalWithRecaptcha;
+    data['g-recaptcha-response'] = self.recaptcha.requiresAsyncToken() ? (self.recaptchaToken ?? '') : self.recaptcha.getResponse();
+    data['g-recaptcha-action'] = self.recaptcha.action;
   });
 
-  extend(modal.prototype, 'fields', function (fields) {
-    if (!app.forum.attribute('fof-recaptcha.configured')) return;
-    if (!isEnabled()) return;
+  extend(modulePath, 'fields', function (fields: ItemList<Mithril.Children>) {
+    if (!shouldApply()) return;
 
-    fields.add('recaptcha', <Recaptcha state={this.recaptcha} />, -5);
+    const self = this as unknown as ModalWithRecaptcha;
+
+    // The Recaptcha component is rendered for every type, including v3 (where it's an invisible
+    // marker div). Mounting it in all modes is how the grecaptcha script gets loaded.
+    fields.add('recaptcha', <Recaptcha state={self.recaptcha} />, -5);
   });
 
-  extend(modal.prototype, 'onerror', function (_, error) {
-    if (!app.forum.attribute('fof-recaptcha.configured')) return;
-    if (!isEnabled()) return;
+  extend(modulePath, 'onerror', function (_: unknown, ...args: unknown[]) {
+    if (!shouldApply()) return;
 
-    this.recaptcha.reset();
+    const self = this as unknown as ModalWithRecaptcha;
+    const error = args[0] as { alert?: { content?: Mithril.Children } };
+    const hadToken = !!self.recaptchaToken;
+    self.recaptchaToken = null;
+    self.recaptcha.reset();
 
-    // Set custom error message during login because no error comes back from /login when recaptcha fails
-    if (type === 'signin' && error.alert && (!error.alert.content || !error.alert.content.length)) {
-      error.alert.content = app.translator.trans('fof-recaptcha.forum.unknown_error');
+    // The /login route returns an HTML error page rather than structured JSON for validation failures,
+    // so the alert content is empty by the time it reaches us. We infer the most likely cause and
+    // surface a clearer message than the generic "unknown error" fallback.
+    if (type === 'signin' && error.alert && (!error.alert.content || !(error.alert.content as unknown[]).length)) {
+      error.alert.content = app.translator.trans(hadToken ? 'fof-recaptcha.lib.rejected' : 'fof-recaptcha.lib.not_completed');
     }
   });
 
-  override(modal.prototype, 'onsubmit', function (original, e) {
-    if (app.forum.attribute('fof-recaptcha.configured') && isEnabled() && this.recaptcha.isInvisible() && !e.isRecaptchaSecondStep) {
-      // When recaptcha is invisible, onsubmit will be called two times
-      // First time with normal event, we will call recaptcha.execute
-      // Second time is called from recaptcha callback with a special isRecaptcha attribute
+  override(modulePath, 'onsubmit', function (original: unknown, ...args: unknown[]) {
+    const self = this as unknown as ModalWithRecaptcha;
+    const e = args[0] as Event;
+    const proceed = () => (original as (e: Event) => unknown)(e);
+
+    if (!shouldApply()) {
+      return proceed();
+    }
+
+    // v2 checkbox: verify the user ticked the box before we submit. Skipping this lets the request
+    // fall into the server-side /login HTML error path, which is much harder to report to the user.
+    if (!self.recaptcha.requiresAsyncToken() && !self.recaptcha.getResponse()) {
       e.preventDefault();
-      this.loading = true;
-      this.recaptcha.execute();
+      self.loaded();
+      self.alertAttrs = {
+        type: 'error',
+        content: app.translator.trans('fof-recaptcha.lib.not_completed'),
+      };
+      m.redraw();
       return;
     }
 
-    return original(e);
-  });
-};
+    if (!self.recaptcha.requiresAsyncToken() || self.recaptchaToken !== null) {
+      return proceed();
+    }
 
-export default () => {
-  addRecaptchaToAuthModal({ modal: ForgotPasswordModal, type: 'forgot', dataMethod: 'requestParams' });
-  addRecaptchaToAuthModal({ modal: ChangePasswordModal, type: 'forgot', dataMethod: 'requestBody' });
-  addRecaptchaToAuthModal({ modal: LogInModal, type: 'signin', dataMethod: 'loginParams' });
-  addRecaptchaToAuthModal({ modal: SignUpModal, type: 'signup', dataMethod: 'submitData' });
-};
+    // Two-pass submit: suppress the default submit event until we have a token, then re-enter.
+    e.preventDefault();
+    self.loading = true;
+    m.redraw();
+
+    self.recaptcha
+      .acquireToken()
+      .then((token) => {
+        self.recaptchaToken = token;
+        proceed();
+      })
+      .catch(() => {
+        self.loaded();
+        self.alertAttrs = {
+          type: 'error',
+          content: app.translator.trans('fof-recaptcha.lib.error'),
+        };
+        m.redraw();
+      });
+  });
+}
+
+export default function extendAuthModals(): void {
+  applyAuthModalExtension({ modulePath: 'flarum/forum/components/ForgotPasswordModal', type: 'forgot', dataMethod: 'requestParams' });
+  applyAuthModalExtension({ modulePath: 'flarum/forum/components/ChangePasswordModal', type: 'forgot', dataMethod: 'requestBody' });
+  applyAuthModalExtension({ modulePath: 'flarum/forum/components/LogInModal', type: 'signin', dataMethod: 'loginParams' });
+  applyAuthModalExtension({ modulePath: 'flarum/forum/components/SignUpModal', type: 'signup', dataMethod: 'submitData' });
+}

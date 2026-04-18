@@ -15,11 +15,8 @@ use Flarum\Foundation\AbstractValidator;
 
 class RecaptchaValidator extends AbstractValidator
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected $rules = [
-        'recaptcha' => [
+    protected array $rules = [
+        'g-recaptcha-response' => [
             'required',
             'recaptcha',
         ],

@@ -17,6 +17,17 @@ class Utils
 {
     public static function isExtensionSetup(SettingsRepositoryInterface $settings): bool
     {
-        return trim($settings->get('fof-recaptcha.credentials.site', '')) !== '' && trim($settings->get('fof-recaptcha.credentials.secret', '')) !== '';
+        return trim((string) $settings->get('fof-recaptcha.credentials.site', '')) !== ''
+            && trim((string) $settings->get('fof-recaptcha.credentials.secret', '')) !== '';
+    }
+
+    /**
+     * @return 'checkbox'|'invisible'|'v3'
+     */
+    public static function type(SettingsRepositoryInterface $settings): string
+    {
+        $type = $settings->get('fof-recaptcha.type', 'checkbox');
+
+        return in_array($type, ['checkbox', 'invisible', 'v3'], true) ? $type : 'checkbox';
     }
 }

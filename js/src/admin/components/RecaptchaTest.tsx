@@ -2,36 +2,43 @@ import type Mithril from 'mithril';
 import app from 'flarum/admin/app';
 
 import Component, { ComponentAttrs } from 'flarum/common/Component';
+import Button from 'flarum/common/components/Button';
+import Alert, { AlertAttrs } from 'flarum/common/components/Alert';
+import classList from 'flarum/common/utils/classList';
 import RecaptchaState from '../../common/states/RecaptchaState';
 import Recaptcha from '../../common/components/Recaptcha';
-import Button from 'flarum/common/components/Button';
-import Alert from 'flarum/common/components/Alert';
-import classList from 'flarum/common/utils/classList';
 
-export default class RecaptchaTest extends Component<any, RecaptchaState | null> {
+interface RecaptchaTestAttrs extends ComponentAttrs {
+  settings?: Record<string, string>;
+}
+
+const TEST_ACTION = 'test';
+
+export default class RecaptchaTest extends Component<RecaptchaTestAttrs, RecaptchaState | null> {
+  state: RecaptchaState | null = null;
   loading = false;
-  alertAttrs: any;
+  alertAttrs: AlertAttrs | null = null;
 
-  view(vnode: Mithril.Vnode<ComponentAttrs, this>): Mithril.Children {
+  view(): Mithril.Children {
     return (
       <div className="RecaptchaPage-recaptcha">
-        <div class="ExtensionPage-permissions-header">
-          <div class="container">
+        <div className="ExtensionPage-permissions-header">
+          <div className="container">
             <h2 className="ExtensionTitle">{app.translator.trans('fof-recaptcha.admin.test.title')}</h2>
           </div>
         </div>
-        <div class="container">
+        <div className="container">
           <form onsubmit={this.onsubmit.bind(this)} className={classList('FoFReCaptchaTestForm', this.state?.isInvisible() && 'isInvisible')}>
-            <div class="Form-group Form-group--recaptcha">
-              <p class="helpText">{app.translator.trans('fof-recaptcha.admin.test.help_text')}</p>
+            <div className="Form-group Form-group--recaptcha">
+              <p className="helpText">{app.translator.trans('fof-recaptcha.admin.test.help_text')}</p>
 
               {this.alertAttrs && <Alert {...this.alertAttrs} dismissible={false} />}
 
               {this.state && <Recaptcha state={this.state} />}
             </div>
 
-            <div class="Form-group">
-              <div class="ButtonGroup">
+            <div className="Form-group">
+              <div className="ButtonGroup">
                 <Button className="Button Button--primary" type="submit" loading={this.loading}>
                   {app.translator.trans(`fof-recaptcha.admin.test.${this.state ? 'submit' : 'load_test'}_button`)}
                 </Button>
@@ -43,15 +50,13 @@ export default class RecaptchaTest extends Component<any, RecaptchaState | null>
                 )}
               </div>
             </div>
-
-            <div class="Form-group"></div>
           </form>
         </div>
       </div>
     );
   }
 
-  destroy() {
+  reset(): void {
     this.state = null;
     this.alertAttrs = null;
     this.loading = false;
@@ -59,26 +64,15 @@ export default class RecaptchaTest extends Component<any, RecaptchaState | null>
     m.redraw.sync();
   }
 
-  initialize() {
-    this.destroy();
+  initialize(): void {
+    this.reset();
 
-    const data = this.attrs.settings || app.data.settings;
+    const data = this.attrs.settings ?? (app.data.settings as unknown as Record<string, string>);
 
-    this.state = new RecaptchaState(
-      data,
-      () => {
-        if (this.state!.isInvisible()) {
-          // Create "fake" event so this works when other extensions extend onsubmit as well
-          const event = new Event('submit');
-          event.isRecaptchaSecondStep = true;
-          this.onsubmit(event);
-        }
-      },
-      this.onerror
-    );
+    this.state = new RecaptchaState(data, TEST_ACTION, () => {}, this.onerror.bind(this));
   }
 
-  async onsubmit(e: Event) {
+  async onsubmit(e: Event): Promise<void> {
     e.preventDefault();
 
     if (!this.state) {
@@ -89,28 +83,26 @@ export default class RecaptchaTest extends Component<any, RecaptchaState | null>
     this.loading = true;
     m.redraw();
 
-    if (this.state.isInvisible() && !e.isRecaptchaSecondStep) {
-      // When recaptcha is invisible, onsubmit will be called two times
-      // First time with normal event, we will call recaptcha.execute
-      // Second time is called from recaptcha callback with a special isRecaptcha attribute
-      e.preventDefault();
-      this.state.execute();
-      return;
-    }
+    let token: string;
 
-    const body = {
-      'g-recaptcha-response': this.state.getResponse(),
-    };
+    try {
+      token = this.state.requiresAsyncToken() ? await this.state.acquireToken() : this.state.getResponse();
+    } catch (error) {
+      return this.onerror(error);
+    }
 
     try {
       await app.request({
         method: 'POST',
         url: `${app.forum.attribute('apiUrl')}/fof/recaptcha/test`,
-        body,
+        body: {
+          'g-recaptcha-response': token,
+          'g-recaptcha-action': this.state.action,
+        },
         errorHandler: () => {},
       });
-    } catch (e) {
-      return this.onerror(e);
+    } catch (error) {
+      return this.onerror(error);
     }
 
     this.loading = false;
@@ -122,8 +114,8 @@ export default class RecaptchaTest extends Component<any, RecaptchaState | null>
     m.redraw();
   }
 
-  onerror(error) {
-    const alert = error.alert || error;
+  onerror(error: unknown): void {
+    const alert = (error as { alert?: AlertAttrs })?.alert ?? (error as AlertAttrs);
 
     this.loading = false;
     this.alertAttrs = alert;

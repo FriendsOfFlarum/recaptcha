@@ -12,7 +12,10 @@
 namespace FoF\ReCaptcha;
 
 use Flarum\Api\ForgotPasswordValidator;
-use Flarum\Api\Serializer\ForumSerializer;
+use Flarum\Api\Resource\DiscussionResource;
+use Flarum\Api\Resource\ForumResource;
+use Flarum\Api\Resource\PostResource;
+use Flarum\Api\Resource\UserResource;
 use Flarum\Discussion\Event\Saving as DiscussionSaving;
 use Flarum\Extend;
 use Flarum\Forum\LogInValidator;
@@ -36,18 +39,28 @@ return [
         ->default('fof-recaptcha.signup', true)
         ->default('fof-recaptcha.signin', true)
         ->default('fof-recaptcha.forgot', true)
-        ->serializeToForum('theme_dark_mode', 'theme_dark_mode', 'boolVal')
+        ->default('fof-recaptcha.type', 'checkbox')
+        ->default('fof-recaptcha.v3_threshold', 0.5)
         ->serializeToForum('fof-recaptcha.credentials.site', 'fof-recaptcha.credentials.site')
         ->serializeToForum('fof-recaptcha.type', 'fof-recaptcha.type')
         ->serializeToForum('fof-recaptcha.signup', 'fof-recaptcha.signup', 'boolVal')
         ->serializeToForum('fof-recaptcha.signin', 'fof-recaptcha.signin', 'boolVal')
         ->serializeToForum('fof-recaptcha.forgot', 'fof-recaptcha.forgot', 'boolVal'),
 
+    (new Extend\ApiResource(ForumResource::class))
+        ->fields(Api\ForumResourceFields::class),
+
+    (new Extend\ApiResource(DiscussionResource::class))
+        ->fields(Api\RecaptchaFields::class),
+
+    (new Extend\ApiResource(PostResource::class))
+        ->fields(Api\RecaptchaFields::class),
+
+    (new Extend\ApiResource(UserResource::class))
+        ->fields(Api\RecaptchaFields::class),
+
     (new Extend\Routes('api'))
         ->post('/fof/recaptcha/test', 'fof-recaptcha.test', Api\Controller\TestReCaptchaController::class),
-
-    (new Extend\ApiSerializer(ForumSerializer::class))
-        ->attributes(ForumAttributes::class),
 
     (new Extend\Validator(RecaptchaValidator::class))
         ->configure(AddValidatorRule::class),
