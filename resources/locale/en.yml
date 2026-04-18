@@ -5,7 +5,13 @@ fof-recaptcha:
       secret_key_label: Secret Key
       site_key_label: Site Key
       type_label: reCAPTCHA Type
-      type_help: This extension only supports reCAPTCHA v2. The selected type must match the type of your reCAPTCHA credentials.
+      type_help: The selected type must match the type of your reCAPTCHA credentials. Checkbox and Invisible are both reCAPTCHA v2; v3 is score-based and runs silently.
+      type_options:
+        checkbox: v2 Checkbox
+        invisible: v2 Invisible
+        v3: v3 (score-based)
+      v3_threshold_label: reCAPTCHA v3 score threshold
+      v3_threshold_help: Submissions scoring below this value (0.0 = likely bot, 1.0 = likely human) will be rejected. Google suggests 0.5 as a starting point. Only used when the type is set to v3.
 
       signup: => core.forum.sign_up.title
       signin: => core.forum.log_in.title
@@ -23,11 +29,16 @@ fof-recaptcha:
 
     permissions:
       post_without_captcha: Create posts and discussions without captcha
-  forum:
-    # This text is shown on the javascript error callback for reCAPTCHA.
-    # This is a generic error handler and we don't have access to the reason, so the message has to be vague.
+  lib:
+    # Shown from the javascript error callback of the reCAPTCHA widget itself.
+    # Generic because we don't have access to the reason.
     error: There was an error submitting reCAPTCHA. Try again.
-    unknown_error: An unknown error occurred. Check the captcha and try again.
+    # Shown when the user tries to submit without completing the v2 checkbox captcha.
+    not_completed: Please complete the reCAPTCHA check before continuing.
+    # Shown when the server rejected the request and the reCAPTCHA token is the likely cause.
+    rejected: The reCAPTCHA check failed. Please try again.
+    # Fallback when we can't tell what went wrong.
+    unknown_error: An unknown error occurred. Please try again.
 
 validation:
   recaptcha: reCAPTCHA validation failed.

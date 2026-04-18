@@ -19,23 +19,15 @@
         }
     ],
     "require": {
-        "flarum/core": "^2.0.0-beta",
-        "google/recaptcha": "^1.2"
+        "flarum/core": "^2.0.0",
+        "google/recaptcha": "^1.3"
     },
     "authors": [
         {
-            "name": "Sajjad Hashemian",
-            "email": "wolaws@gmail.com"
-        },
-        {
-            "name": "David Sevilla Martín",
-            "email": "david.s@redevs.org",
-            "role": "Developer"
+            "name": "FoF Team",
+            "homepage": "https://friendsofflarum.org"
         }
     ],
-    "replace": {
-        "sijad/flarum-ext-recaptcha": "*"
-    },
     "autoload": {
         "psr-4": {
             "FoF\\ReCaptcha\\": "src/"
@@ -61,10 +53,13 @@
             "modules": {
                 "githubActions": true
             }
+        },
+        "branch-alias": {
+            "dev-2.x": "2.x-dev"
         }
     },
     "require-dev": {
-        "flarum/phpstan": "^2.0.0-beta"
+        "flarum/phpstan": "^2.0.0"
     },
     "scripts": {
         "analyse:phpstan": "phpstan analyse",
@@ -72,5 +67,7 @@
     },
     "scripts-descriptions": {
         "analyse:phpstan": "Run static analysis"
-    }
+    },
+    "minimum-stability": "beta",
+    "prefer-stable": true
 }

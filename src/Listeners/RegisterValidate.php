@@ -23,7 +23,7 @@ class RegisterValidate
     {
     }
 
-    public function handle(Saving $event)
+    public function handle(Saving $event): void
     {
         if (!Utils::isExtensionSetup($this->settings)) {
             return;
@@ -32,7 +32,8 @@ class RegisterValidate
         // We also check for the actor's admin status, so that we can allow admins to create users from the admin panel without recaptcha blocking the action.
         if (!$event->user->exists && $this->settings->get('fof-recaptcha.signup') && !$event->actor->isAdmin()) {
             $this->validator->assertValid([
-                'recaptcha' => Arr::get($event->data, 'attributes.g-recaptcha-response'),
+                'g-recaptcha-response' => Arr::get($event->data, 'attributes.g-recaptcha-response'),
+                'g-recaptcha-action' => Arr::get($event->data, 'attributes.g-recaptcha-action'),
             ]);
         }
     }

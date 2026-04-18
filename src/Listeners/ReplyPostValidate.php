@@ -23,7 +23,7 @@ class ReplyPostValidate
     {
     }
 
-    public function handle(Saving $event)
+    public function handle(Saving $event): void
     {
         if (!Utils::isExtensionSetup($this->settings)) {
             return;
@@ -42,7 +42,8 @@ class ReplyPostValidate
             }
 
             $this->validator->assertValid([
-                'recaptcha' => Arr::get($event->data, 'attributes.g-recaptcha-response'),
+                'g-recaptcha-response' => Arr::get($event->data, 'attributes.g-recaptcha-response'),
+                'g-recaptcha-action' => Arr::get($event->data, 'attributes.g-recaptcha-action'),
             ]);
         }
     }

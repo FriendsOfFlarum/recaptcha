@@ -27,14 +27,13 @@ class TestReCaptchaController implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $actor = RequestUtil::getActor($request);
+        RequestUtil::getActor($request)->assertAdmin();
 
-        $actor->assertAdmin();
-
-        $data = $request->getParsedBody();
+        $body = (array) $request->getParsedBody();
 
         $this->validator->assertValid([
-            'recaptcha' => Arr::get($data, 'g-recaptcha-response'),
+            'g-recaptcha-response' => Arr::get($body, 'g-recaptcha-response'),
+            'g-recaptcha-action' => Arr::get($body, 'g-recaptcha-action'),
         ]);
 
         return new EmptyResponse();
