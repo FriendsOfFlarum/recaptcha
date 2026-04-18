@@ -33,7 +33,7 @@ class TestReCaptchaController implements RequestHandlerInterface
 
         $this->validator->assertValid([
             'g-recaptcha-response' => Arr::get($body, 'g-recaptcha-response'),
-            'g-recaptcha-action' => Arr::get($body, 'g-recaptcha-action'),
+            'g-recaptcha-action'   => Arr::get($body, 'g-recaptcha-action'),
         ]);
 
         return new EmptyResponse();

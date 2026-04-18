@@ -43,7 +43,7 @@ class ReplyPostValidate
 
             $this->validator->assertValid([
                 'g-recaptcha-response' => Arr::get($event->data, 'attributes.g-recaptcha-response'),
-                'g-recaptcha-action' => Arr::get($event->data, 'attributes.g-recaptcha-action'),
+                'g-recaptcha-action'   => Arr::get($event->data, 'attributes.g-recaptcha-action'),
             ]);
         }
     }
