@@ -21,4 +21,8 @@ class RecaptchaValidator extends AbstractValidator
             'recaptcha',
         ],
     ];
+
+    protected array $messages = [
+        'g-recaptcha-response.required' => 'fof-recaptcha.forum.validation.required',
+    ];
 }

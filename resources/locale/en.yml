@@ -43,3 +43,6 @@ fof-recaptcha:
 validation:
   recaptcha: reCAPTCHA validation failed.
   recaptcha-unknown: An unknown error occurred while validating reCAPTCHA ({errors}).
+
+  attributes:
+    g-recaptcha-response: reCAPTCHA
