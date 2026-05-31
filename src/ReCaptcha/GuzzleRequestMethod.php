@@ -30,7 +30,7 @@ class GuzzleRequestMethod implements RequestMethod
         $this->siteVerifyUrl = $siteVerifyUrl ?? ReCaptcha::SITE_VERIFY_URL;
     }
 
-    public function submit(RequestParameters $params)
+    public function submit(RequestParameters $params): string
     {
         $client = new Client();
 
