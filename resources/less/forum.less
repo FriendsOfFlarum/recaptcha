@@ -1,14 +1,4 @@
-.SignUpModal, .LogInModal, .ForgotPasswordModal, .ChangePasswordModal {
-  .g-recaptcha {
-    > div {
-      width: auto !important;
-    }
-
-    .grecaptcha-badge {
-      position: absolute !important;
-    }
-  }
-}
+@import './common.less';
 
 .ComposerBody-header .item-recaptcha {
   display: block; // So it's always on its own line
@@ -40,6 +30,20 @@
       .g-recaptcha {
         transform-origin: 0 0;
       }
+    }
+  }
+
+  // Avoid reCAPTCHA challenge going off-screen on mobile.
+  // See https://github.com/google/recaptcha/issues/334#issuecomment-1864799155
+  .g-recaptcha-bubble-arrow {
+    display: none;
+
+    + div {
+      position: fixed !important;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      -webkit-transform: translate(-50%, -50%);
     }
   }
 }

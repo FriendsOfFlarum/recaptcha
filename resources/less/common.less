@@ -1,0 +1,33 @@
+#fof-recaptcha {
+  align-items: center;
+
+  .g-recaptcha {
+    // Background to show space isn't empty
+    background-color: var(--body-bg);
+    border-radius: 3px;
+
+    // We give a border to let the user know something is here before reCAPTCHA loads.
+    // Remove it after since it seems to clash with iframe.
+    &:empty {
+      border: 0.5px dotted var(--control-color);
+    }
+
+    // reCAPTCHA size is 304x78 but contains white bars. See https://stackoverflow.com/a/32547295 for this fix.
+    // There were other fixes without iframe margin but they didn't seem to work as well.
+    overflow: hidden;
+    width:298px;
+    height:74px;
+
+    iframe {
+      margin: -1px 0 0 -2px;
+    }
+
+    > div {
+      overflow: hidden;
+    }
+
+    .grecaptcha-badge {
+      position: absolute !important;
+    }
+  }
+}
