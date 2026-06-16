@@ -65,23 +65,6 @@ function applyAuthModalExtension({ modulePath, type, dataMethod }: AuthModalConf
     fields.add('recaptcha', <Recaptcha state={self.recaptcha} />, -5);
   });
 
-  extend(modulePath, 'onerror', function (_: unknown, ...args: unknown[]) {
-    if (!shouldApply()) return;
-
-    const self = this as unknown as ModalWithRecaptcha;
-    const error = args[0] as { alert?: { content?: Mithril.Children } };
-    const hadToken = !!self.recaptchaToken;
-    self.recaptchaToken = null;
-    self.recaptcha.reset();
-
-    // The /login route returns an HTML error page rather than structured JSON for validation failures,
-    // so the alert content is empty by the time it reaches us. We infer the most likely cause and
-    // surface a clearer message than the generic "unknown error" fallback.
-    if (type === 'signin' && error.alert && (!error.alert.content || !(error.alert.content as unknown[]).length)) {
-      error.alert.content = app.translator.trans(hadToken ? 'fof-recaptcha.lib.rejected' : 'fof-recaptcha.lib.not_completed');
-    }
-  });
-
   override(modulePath, 'onsubmit', function (original: unknown, ...args: unknown[]) {
     const self = this as unknown as ModalWithRecaptcha;
     const e = args[0] as Event;
@@ -89,19 +72,6 @@ function applyAuthModalExtension({ modulePath, type, dataMethod }: AuthModalConf
 
     if (!shouldApply()) {
       return proceed();
-    }
-
-    // v2 checkbox: verify the user ticked the box before we submit. Skipping this lets the request
-    // fall into the server-side /login HTML error path, which is much harder to report to the user.
-    if (!self.recaptcha.requiresAsyncToken() && !self.recaptcha.getResponse()) {
-      e.preventDefault();
-      self.loaded();
-      self.alertAttrs = {
-        type: 'error',
-        content: app.translator.trans('fof-recaptcha.lib.not_completed'),
-      };
-      m.redraw();
-      return;
     }
 
     if (!self.recaptcha.requiresAsyncToken() || self.recaptchaToken !== null) {
