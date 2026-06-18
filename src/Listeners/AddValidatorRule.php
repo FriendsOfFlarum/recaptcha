@@ -28,8 +28,7 @@ class AddValidatorRule
     public function __construct(
         protected SettingsRepositoryInterface $settings,
         protected MaintenanceMode $maintenanceMode
-    )
-    {
+    ) {
     }
 
     public function __invoke(AbstractValidator $flarumValidator, Validator $validator): void
