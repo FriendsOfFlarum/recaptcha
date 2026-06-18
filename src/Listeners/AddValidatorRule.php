@@ -14,6 +14,7 @@ namespace FoF\ReCaptcha\Listeners;
 use Flarum\Api\ForgotPasswordValidator;
 use Flarum\Forum\LogInValidator;
 use Flarum\Foundation\AbstractValidator;
+use Flarum\Locale\TranslatorInterface;
 use Flarum\Settings\SettingsRepositoryInterface;
 use FoF\ReCaptcha\ReCaptcha\GuzzleRequestMethod;
 use FoF\ReCaptcha\Utils;
@@ -70,15 +71,17 @@ class AddValidatorRule
             }
         );
 
-        if ($flarumValidator instanceof LogInValidator && $this->settings->get('fof-recaptcha.signin')) {
+        $addRule = (
+            ($flarumValidator instanceof LogInValidator && $this->settings->get('fof-recaptcha.signin')) ||
+            ($flarumValidator instanceof ForgotPasswordValidator && $this->settings->get('fof-recaptcha.forgot'))
+        );
+
+        if ($addRule) {
             $validator->addRules([
                 'g-recaptcha-response' => ['required', 'recaptcha'],
             ]);
-        }
-
-        if ($flarumValidator instanceof ForgotPasswordValidator && $this->settings->get('fof-recaptcha.forgot')) {
-            $validator->addRules([
-                'g-recaptcha-response' => ['required', 'recaptcha'],
+            $validator->setCustomMessages([
+                'g-recaptcha-response.required' => resolve(TranslatorInterface::class)->trans('fof-recaptcha.lib.not_completed'),
             ]);
         }
     }
