@@ -1,3 +1,4 @@
+import app from 'flarum/admin/app';
 import ExtensionPage, { ExtensionPageAttrs } from 'flarum/admin/components/ExtensionPage';
 import Mithril from 'mithril';
 import ItemList from 'flarum/common/utils/ItemList';
@@ -13,6 +14,14 @@ export default class RecaptchaPage extends ExtensionPage {
       if (settings[key] instanceof Function) {
         settings[key] = settings[key].call(this);
       }
+    }
+
+    if (app.data.maintenanceMode) {
+      items.add(
+        'maintenance',
+        <div className="Alert Alert--danger">{app.translator.trans('fof-recaptcha.admin.maintenance_mode_warning')}</div>,
+        100
+      );
     }
 
     items.add('recaptcha', <RecaptchaTest settings={settings} />);

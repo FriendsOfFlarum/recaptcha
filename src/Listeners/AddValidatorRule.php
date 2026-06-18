@@ -14,6 +14,7 @@ namespace FoF\ReCaptcha\Listeners;
 use Flarum\Api\ForgotPasswordValidator;
 use Flarum\Forum\LogInValidator;
 use Flarum\Foundation\AbstractValidator;
+use Flarum\Foundation\MaintenanceMode;
 use Flarum\Locale\TranslatorInterface;
 use Flarum\Settings\SettingsRepositoryInterface;
 use FoF\ReCaptcha\ReCaptcha\GuzzleRequestMethod;
@@ -24,7 +25,10 @@ use ReCaptcha\ReCaptcha;
 
 class AddValidatorRule
 {
-    public function __construct(protected SettingsRepositoryInterface $settings)
+    public function __construct(
+        protected SettingsRepositoryInterface $settings,
+        protected MaintenanceMode $maintenanceMode
+    )
     {
     }
 
@@ -76,7 +80,7 @@ class AddValidatorRule
             ($flarumValidator instanceof ForgotPasswordValidator && $this->settings->get('fof-recaptcha.forgot'))
         );
 
-        if ($addRule) {
+        if ($addRule && !$this->maintenanceMode->inMaintenanceMode()) {
             $validator->addRules([
                 'g-recaptcha-response' => ['required', 'recaptcha'],
             ]);
