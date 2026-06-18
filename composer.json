@@ -43,7 +43,8 @@
                 "color": "#fff"
             },
             "optional-dependencies": [
-                "fof/oauth"
+                "fof/oauth",
+                "ianm/twofactor"
             ]
         },
         "flagrow": {

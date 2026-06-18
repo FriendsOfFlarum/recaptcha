@@ -9,6 +9,7 @@ import Recaptcha from '../common/components/Recaptcha';
 interface ModalWithRecaptcha {
   recaptcha: RecaptchaState;
   recaptchaToken: string | null;
+  recaptchaDisable: boolean;
   alertAttrs: AlertAttrs | null;
   loading: boolean;
   loaded(): void;
@@ -45,12 +46,14 @@ function applyAuthModalExtension({ modulePath, type, dataMethod }: AuthModalConf
       }
     );
     self.recaptchaToken = null;
+    self.recaptchaDisable = false;
   });
 
   extend(modulePath, dataMethod, function (data: Record<string, unknown>) {
-    if (!shouldApply()) return;
-
     const self = this as unknown as ModalWithRecaptcha;
+
+    if (!shouldApply() || self.recaptchaDisable) return;
+
     data['g-recaptcha-response'] = self.recaptcha.requiresAsyncToken() ? (self.recaptchaToken ?? '') : self.recaptcha.getResponse();
     data['g-recaptcha-action'] = self.recaptcha.action;
   });
@@ -60,9 +63,14 @@ function applyAuthModalExtension({ modulePath, type, dataMethod }: AuthModalConf
 
     const self = this as unknown as ModalWithRecaptcha;
 
-    // The Recaptcha component is rendered for every type, including v3 (where it's an invisible
-    // marker div). Mounting it in all modes is how the grecaptcha script gets loaded.
-    fields.add('recaptcha', <Recaptcha state={self.recaptcha} />, -5);
+    // If 2FA field is present, user has already passed reCAPTCHA.
+    self.recaptchaDisable = fields.has('twoFactor');
+
+    if (!self.recaptchaDisable) {
+      // The Recaptcha component is rendered for every type, including v3 (where it's an invisible
+      // marker div). Mounting it in all modes is how the grecaptcha script gets loaded.
+      fields.add('recaptcha', <Recaptcha state={self.recaptcha} />, -5);
+    }
   });
 
   override(modulePath, 'onsubmit', function (original: unknown, ...args: unknown[]) {
@@ -70,7 +78,7 @@ function applyAuthModalExtension({ modulePath, type, dataMethod }: AuthModalConf
     const e = args[0] as Event;
     const proceed = () => (original as (e: Event) => unknown)(e);
 
-    if (!shouldApply()) {
+    if (!shouldApply() || self.recaptchaDisable) {
       return proceed();
     }
 
@@ -83,7 +91,7 @@ function applyAuthModalExtension({ modulePath, type, dataMethod }: AuthModalConf
     self.loading = true;
     m.redraw();
 
-    self.recaptcha
+    return self.recaptcha
       .acquireToken()
       .then((token) => {
         self.recaptchaToken = token;
