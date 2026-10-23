@@ -71,7 +71,7 @@ export default function extendComposer(modulePath: string, action: string): void
     // than letting the server reject the post with a generic validation error.
     if (!self.recaptcha.requiresAsyncToken() && !self.recaptcha.getResponse()) {
       app.alerts.show({ type: 'error' }, app.translator.trans('fof-recaptcha.lib.not_completed'));
-      return;
+      return undefined;
     }
 
     if (!self.recaptcha.requiresAsyncToken() || self.recaptchaToken !== null) {
@@ -89,5 +89,7 @@ export default function extendComposer(modulePath: string, action: string): void
         self.loading = false;
         m.redraw();
       });
+
+    return undefined;
   });
 }
