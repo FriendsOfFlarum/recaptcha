@@ -44,7 +44,8 @@ class AddValidatorRule
         $validator->addExtension(
             'recaptcha',
             function ($attribute, $value, $parameters) use ($validator, $secret, $type, $threshold) {
-                if (empty($value)) {
+                // google/recaptcha 2.x types verify(string): a non-string token would throw a TypeError.
+                if (!is_string($value) || $value === '') {
                     return false;
                 }
 
