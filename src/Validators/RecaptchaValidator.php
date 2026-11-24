@@ -22,7 +22,10 @@ class RecaptchaValidator extends AbstractValidator
         ],
     ];
 
-    protected array $messages = [
-        'g-recaptcha-response.required' => 'fof-recaptcha.forum.validation.required',
-    ];
+    protected function getMessages(): array
+    {
+        return [
+            'g-recaptcha-response.required' => $this->translator->trans('fof-recaptcha.lib.not_completed'),
+        ];
+    }
 }
