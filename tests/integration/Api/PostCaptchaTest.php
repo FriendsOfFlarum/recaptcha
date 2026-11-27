@@ -60,7 +60,7 @@ class PostCaptchaTest extends RecaptchaTestCase
     {
         return [
             'access token' => ['token'],
-            'MCP' => ['mcp'],
+            'MCP'          => ['mcp'],
         ];
     }
 
@@ -76,11 +76,11 @@ class PostCaptchaTest extends RecaptchaTestCase
         $token = Str::random(40);
 
         $this->database()->table('access_tokens')->insert([
-            'token' => $token,
-            'user_id' => 2,
-            'created_at' => Carbon::now()->toDateTimeString(),
+            'token'            => $token,
+            'user_id'          => 2,
+            'created_at'       => Carbon::now()->toDateTimeString(),
             'last_activity_at' => Carbon::now()->toDateTimeString(),
-            'type' => 'developer',
+            'type'             => 'developer',
         ]);
 
         return $request->withHeader('Authorization', "Token $token");
@@ -90,7 +90,7 @@ class PostCaptchaTest extends RecaptchaTestCase
     {
         return $this->request('POST', '/api/discussions', $options + ['json' => [
             'data' => [
-                'type' => 'discussions',
+                'type'       => 'discussions',
                 'attributes' => ['title' => 'A new discussion', 'content' => 'Its first post.'] + $attributes,
             ],
         ]]);
@@ -100,8 +100,8 @@ class PostCaptchaTest extends RecaptchaTestCase
     {
         return $this->request('POST', '/api/posts', $options + ['json' => [
             'data' => [
-                'type' => 'posts',
-                'attributes' => ['content' => 'A reply.'] + $attributes,
+                'type'          => 'posts',
+                'attributes'    => ['content' => 'A reply.'] + $attributes,
                 'relationships' => ['discussion' => ['data' => ['type' => 'discussions', 'id' => '1']]],
             ],
         ]]);
