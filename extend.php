@@ -51,10 +51,12 @@ return [
         ->fields(Api\ForumResourceFields::class),
 
     (new Extend\ApiResource(DiscussionResource::class))
-        ->fields(Api\RecaptchaFields::class),
+        ->fields(Api\RecaptchaFields::class)
+        ->endpoint('create', Api\RefuseClientsWithoutCaptcha::class),
 
     (new Extend\ApiResource(PostResource::class))
-        ->fields(Api\RecaptchaFields::class),
+        ->fields(Api\RecaptchaFields::class)
+        ->endpoint('create', Api\RefuseClientsWithoutCaptcha::class),
 
     (new Extend\ApiResource(UserResource::class))
         ->fields(Api\RecaptchaFields::class),

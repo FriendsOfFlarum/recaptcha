@@ -19,7 +19,7 @@
         }
     ],
     "require": {
-        "flarum/core": "^2.0.0-rc.3",
+        "flarum/core": "^2.1.0-beta.1",
         "google/recaptcha": "^1.3 || ^2.0"
     },
     "authors": [
@@ -65,8 +65,8 @@
         }
     },
     "require-dev": {
-        "flarum/phpstan": "^2.0.0",
-        "flarum/testing": "^2.0"
+        "flarum/phpstan": "^2.1.0-beta.1",
+        "flarum/testing": "^2.1.0-beta.1"
     },
     "scripts": {
         "test": [

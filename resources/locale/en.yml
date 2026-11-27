@@ -31,6 +31,8 @@ fof-recaptcha:
 
     permissions:
       post_without_captcha: Create posts and discussions without captcha
+  api:
+    not_available_to_clients: 'This forum asks for a reCAPTCHA on new discussions and replies, which can''t be completed outside the forum''s own pages, such as through the API or an MCP client. Post from the forum instead, or ask an administrator for the "{permission}" permission.'
   lib:
     # Shown from the javascript error callback of the reCAPTCHA widget itself.
     # Generic because we don't have access to the reason.

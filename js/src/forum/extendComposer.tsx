@@ -68,7 +68,7 @@ export default function extendComposer(modulePath: string, action: string): void
     }
 
     // v2 checkbox: block the submit client-side if the user hasn't completed the captcha, rather
-    // than letting the server reject the post with a generic validation error.
+    // than sending a post the server would refuse.
     if (!self.recaptcha.requiresAsyncToken() && !self.recaptcha.getResponse()) {
       app.alerts.show({ type: 'error' }, app.translator.trans('fof-recaptcha.lib.not_completed'));
       return undefined;
